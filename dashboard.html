@@ -1,0 +1,3791 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoTGuardAI - AI-Powered IoT Security Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6e45e2;
+            --secondary: #88d3ce;
+            --dark: #1a1a2e;
+            --light: #f1f1f1;
+            --danger: #ff4d4d;
+            --warning: #ffc107;
+            --success: #28a745;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+       
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 10000;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--danger);
+        }
+       
+        .audio-controls button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+       
+        .audio-controls button:hover {
+            transform: scale(1.1);
+            background: #aa4fe6;
+        }
+
+        .info-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+       
+        .info-popup.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+       
+        .info-popup-content {
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(110, 69, 226, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+       
+        .info-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+       
+        .info-popup-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+       
+        .info-popup h3 {
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .info-popup h3 i {
+            color: var(--primary);
+        }
+       
+        .info-popup-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+       
+        .info-popup-content ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+       
+        .info-popup-content li {
+            margin-bottom: 0.5rem;
+        }
+
+       
+        .selection-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(110, 69, 226, 0.2);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(110, 69, 226, 0.2);
+            border-color: var(--primary);
+        }
+
+        .option-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .btn-select {
+            padding: 0.8rem 1.5rem;
+            background: rgba(110, 69, 226, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            border-radius: 30px;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-select:hover {
+            background: var(--primary);
+        }
+
+        .protection-display {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+       
+        .protection-info {
+            flex: 1;
+        }
+       
+        .protection-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+       
+        .protection-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-pdf {
+            padding: 0.5rem 1rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-pdf:hover {
+            background: #d23333;
+            transform: translateY(-2px);
+        }
+
+     
+        .recommendation-btn {
+            position: relative;
+        }
+
+        .recommendation-btn::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-btn:hover::after {
+            opacity: 1;
+            bottom: 120%;
+        }
+       
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+       
+        .history-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+       
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+       
+        .history-title {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+       
+        .history-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+       
+        .history-details {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+       
+        .history-severity {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+       
+        .severity-high {
+            background-color: rgba(255, 77, 77, 0.2);
+            color: var(--danger);
+        }
+       
+        .severity-medium {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--warning);
+        }
+       
+        .severity-low {
+            background-color: rgba(23, 162, 184, 0.2);
+            color: var(--info);
+        }
+       
+        .recommendation-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+       
+        .recommendation-btn {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+       
+        .recommendation-btn.implement {
+            background: var(--success);
+            color: white;
+        }
+       
+        .recommendation-btn.review {
+            background: var(--info);
+            color: white;
+        }
+       
+        .recommendation-btn.details {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+       
+        .recommendation-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+       
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: all 0.5s ease;
+        }
+
+        .password-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .password-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid rgba(110, 69, 226, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            animation: scaleUp 0.5s forwards;
+        }
+
+        @keyframes scaleUp {
+            to { transform: scale(1); }
+        }
+
+        .password-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .password-box p {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .password-input {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-input input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(110, 69, 226, 0.3);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .password-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(110, 69, 226, 0.3);
+        }
+
+        .password-input i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light);
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        .password-error {
+            color: var(--danger);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .password-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(110, 69, 226, 0.4);
+        }
+
+        .password-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(110, 69, 226, 0.6);
+        }
+
+        .whatsapp-contact {
+            margin-top: 1.5rem;
+            padding: 0.8rem;
+            background: rgba(37, 211, 102, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--light);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-contact:hover {
+            background: rgba(37, 211, 102, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-contact i {
+            color: #25D366;
+            font-size: 1.2rem;
+        }
+
+        .unauthorized-access {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .unauthorized-access h2 {
+            color: var(--danger);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .unauthorized-access p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .unauthorized-access .alert-icon {
+            font-size: 5rem;
+            color: var(--danger);
+            margin-bottom: 1.5rem;
+            animation: pulse 1s infinite;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(110, 69, 226, 0.3);
+            animation: slideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 30px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(26, 26, 46, 0.7)),
+                        url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            position: relative;
+            margin-top: 80px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(110, 69, 226, 0.2) 0%, transparent 30%);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 70%, rgba(136, 211, 206, 0.2) 0%, transparent 30%);
+            animation: float 10s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-10px, -10px); }
+        }
+
+        .hero-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: var(--light);
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(110, 69, 226, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(110, 69, 226, 0.6);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -60%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .dashboard {
+            padding: 5rem 5%;
+            background-color: var(--dark);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .demo-controls span {
+            font-weight: 500;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 69, 226, 0.2);
+            transition: all 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: cardAppear 0.6s forwards;
+        }
+
+        @keyframes cardAppear {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .dashboard-card:nth-child(1) { animation-delay: 0.2s; }
+        .dashboard-card:nth-child(2) { animation-delay: 0.4s; }
+        .dashboard-card:nth-child(3) { animation-delay: 0.6s; }
+        .dashboard-card:nth-child(4) { animation-delay: 0.8s; }
+        .dashboard-card:nth-child(5) { animation-delay: 1s; }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(110, 69, 226, 0.3);
+            border-color: rgba(110, 69, 226, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .card-header i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .card-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+            transform-origin: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .alert:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); }
+            50% { transform: scale(1.02); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+        }
+
+        .alert-danger {
+            background-color: rgba(255, 77, 77, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-info {
+            background-color: rgba(23, 162, 184, 0.2);
+            border-left: 4px solid var(--info);
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .alert-danger i {
+            color: var(--danger);
+        }
+
+        .alert-warning i {
+            color: var(--warning);
+        }
+
+        .alert-success i {
+            color: var(--success);
+        }
+
+        .alert-info i {
+            color: var(--info);
+        }
+
+        .alert-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .alert-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .indicator-danger {
+            background-color: var(--danger);
+        }
+
+        .indicator-warning {
+            background-color: var(--warning);
+        }
+
+        .indicator-success {
+            background-color: var(--success);
+        }
+
+        .indicator-info {
+            background-color: var(--info);
+        }
+
+        .chart-container {
+            height: 200px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .threat-map {
+            grid-column: span 2;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 69, 226, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .threat-map::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .threat-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+            animation: pulse 2s infinite, float 5s infinite ease-in-out;
+            z-index: 2;
+        }
+
+        .threat-point::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(255, 77, 77, 0.3);
+            top: -6px;
+            left: -6px;
+            z-index: 1;
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .admin-panel {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(110, 69, 226, 0.5);
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: cardAppear 0.6s 0.1s forwards;
+        }
+       
+        .admin-panel h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .phone-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+       
+        .phone-input {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+       
+        .phone-input input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(110, 69, 226, 0.3);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+       
+        .phone-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(110, 69, 226, 0.3);
+        }
+       
+        .phone-input button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+       
+        .phone-input button:hover {
+            background: #ff3333;
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(255, 77, 77, 0.3);
+        }
+       
+        .add-phone-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+       
+        .add-phone-btn:hover {
+            background: #5d3dc1;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(110, 69, 226, 0.3);
+        }
+       
+        .save-config-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 0.8rem 1.8rem;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+       
+        .save-config-btn:hover {
+            background: #218838;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+       
+        .sms-status {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: rgba(40, 167, 69, 0.2);
+            border-left: 4px solid var(--success);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sms-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1rem;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 4px solid var(--primary);
+        }
+
+        .sms-notification.show {
+            transform: translateX(0);
+        }
+
+        .sms-notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .sms-notification-header h4 {
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sms-notification-body {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .sms-notification-close {
+            background: none;
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .sms-notification-close:hover {
+            transform: rotate(90deg);
+            color: var(--danger);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-out;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .alert-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+            border: 1px solid rgba(110, 69, 226, 0.5);
+            display: none;
+        }
+
+        .alert-details h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-item span:first-child {
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .detail-item span:last-child {
+            text-align: right;
+            max-width: 60%;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-sm:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .device-list {
+            margin-top: 1rem;
+        }
+
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .device-info i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .device-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+        .device-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .device-popup.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .device-popup-content {
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(110, 69, 226, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .device-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .device-popup-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .device-popup h3 {
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .device-popup h3 i {
+            color: var(--primary);
+        }
+
+        .device-popup-logs {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .device-popup-logs p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--light);
+            opacity: 0.8;
+        }
+
+        .device-popup-logs p.warning {
+            color: var(--warning);
+        }
+
+        .device-popup-logs p.error {
+            color: var(--danger);
+        }
+
+        .device-popup-logs p.success {
+            color: var(--success);
+        }
+        .recommendation {
+            display: flex;
+            gap: 15px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+
+        .recommendation i {
+            font-size: 1.5rem;
+            margin-top: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .recommendation-content {
+            flex: 1;
+        }
+
+        .recommendation h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendation p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .features {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(26, 26, 46, 0.95));
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 69, 226, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(110, 69, 226, 0.25);
+            border-color: rgba(110, 69, 226, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
+            text-shadow: 0 5px 15px rgba(110, 69, 226, 0.4);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover h3 {
+            color: var(--secondary);
+        }
+
+        .feature-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover p {
+            opacity: 1;
+        }
+        .dashboard-row.center-recommendations {
+            display: flex;
+            justify-content: center;
+        }
+       
+        .dashboard-row.center-recommendations .dashboard-card {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .stats {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, rgba(110, 69, 226, 0.1), rgba(26, 26, 46, 0.9));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(110, 69, 226, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(110, 69, 226, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-number {
+            text-shadow: 0 5px 15px rgba(110, 69, 226, 0.4);
+        }
+
+        .stat-card p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover p {
+            opacity: 1;
+            color: var(--secondary);
+        }
+
+        footer {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(26, 26, 46, 0.95));
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid rgba(110, 69, 226, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(110, 69, 226, 0.1) 0%, transparent 30%);
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+            animation: underlineLoop 3s infinite;
+        }
+
+        @keyframes underlineLoop {
+            0%, 100% { width: 40px; left: 0; }
+            50% { width: 100%; left: 0; }
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .footer-links a:hover i {
+            transform: translateX(3px);
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: var(--secondary);
+        }
+
+        .footer-contact p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-contact i {
+            color: var(--secondary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1.2rem;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .social-links a:hover::before {
+            left: 100%;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(110, 69, 226, 0.4);
+        }
+
+        .social-links a:nth-child(1):hover { background: #1DA1F2; } /* Twitter */
+        .social-links a:nth-child(2):hover { background: #0077B5; } /* LinkedIn */
+        .social-links a:nth-child(3):hover { background: #333; } /* GitHub */
+        .social-links a:nth-child(4):hover { background: #5865F2; } /* Discord */
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .footer-bottom p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        .footer-logo img {
+            height: 30px;
+        }
+
+        .footer-logo h2 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .newsletter {
+            margin-top: 1.5rem;
+        }
+
+        .newsletter p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(110, 69, 226, 0.3);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .newsletter-form button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(110, 69, 226, 0.3);
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card.wide {
+            grid-column: span 2;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+       
+       
+        .analytics-section {
+            padding: 3rem 5%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+       
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+       
+        .analytics-header h3 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .analytics-header h3 i {
+            color: var(--primary);
+        }
+       
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+       
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(110, 69, 226, 0.2);
+        }
+       
+        .analytics-card h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+       
+        .analytics-chart {
+            height: 300px;
+            width: 100%;
+        }
+       
+        .protection-item {
+            margin-bottom: 1.5rem;
+        }
+       
+        .protection-item h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: var(--secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+       
+        .protection-item h4 span {
+            font-weight: normal;
+            color: var(--light);
+        }
+       
+        .protection-item p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+ 
+        .file-upload-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px dashed rgba(110, 69, 226, 0.5);
+            text-align: center;
+        }
+       
+        .file-upload-section h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+       
+        .file-upload-section p {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+       
+        .file-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem 1.5rem;
+            background: rgba(110, 69, 226, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+       
+        .file-upload-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+       
+        #fileInput {
+            display: none;
+        }
+       
+        .uploaded-files {
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+       
+        .uploaded-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+       
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .file-actions button {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+        }
+
+        @media (max-width: 992px) {
+            .threat-map {
+                grid-column: span 1;
+            }
+           
+            .dashboard-row {
+                grid-template-columns: 1fr;
+            }
+           
+            .dashboard-card.wide {
+                grid-column: span 1;
+            }
+           
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .selection-options {
+                grid-template-columns: 1fr;
+            }
+           
+            .protection-display {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--dark);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: all 0.5s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .password-box {
+                padding: 1.5rem;
+            }
+           
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="alertSound" preload="auto" loop>
+        <source src="emergency-alarm.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+   
+
+    <div class="audio-controls" id="audioControls" style="display: none;">
+        <button id="muteAlarm">
+            <i class="fas fa-bell"></i>
+        </button>
+    </div>
+ 
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-box">
+            <h2><i class="fas fa-lock"></i> Secure Access</h2>
+            <p>Please enter the password to access the IoTGuardAI dashboard</p>
+            <div class="password-input">
+                <input type="password" id="passwordInput" placeholder="Enter password">
+                <i class="fas fa-eye" id="togglePassword"></i>
+            </div>
+            <p class="password-error" id="passwordError">Incorrect password. Please try again.</p>
+            <button class="password-btn" id="passwordBtn">Access Dashboard</button>
+            <a href="https://wa.me/8801886408639?text=Emergency%20access%20required%20for%20IoTGuardAI%20dashboard" class="whatsapp-contact" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                Contact admin via WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <div class="unauthorized-access" id="unauthorizedAccess">
+        <div class="alert-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2>UNAUTHORIZED ACCESS DETECTED</h2>
+        <p>Our system has detected multiple failed login attempts. All administrative contacts have been notified. This incident has been logged and authorities will be contacted if further attempts are made.</p>
+        <p>Your IP address and location data have been recorded for security purposes.</p>
+        <button id="muteAlarmBtn" style="margin-top: 20px; padding: 10px 20px; background: var(--danger); color: white; border: none; border-radius: 5px; cursor: pointer;">
+            <i class="fas fa-volume-mute"></i> Mute Alarm
+        </button>
+    </div>
+
+    <!-- Industry/Environment Info Popup -->
+    <div class="info-popup" id="infoPopup">
+        <div class="info-popup-content">
+            <button class="info-popup-close" id="infoPopupClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3><i class="fas fa-industry"></i> Select Protection Type</h3>
+           
+            <div class="selection-options" id="selectionOptions">
+                <div class="option-card" id="industrialOption">
+                    <div class="option-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h4>Industrial Protection</h4>
+                    <p>Advanced security for manufacturing, energy, and industrial IoT systems</p>
+                    <button class="btn-select">Select Industrial</button>
+                </div>
+               
+                <div class="option-card" id="environmentalOption">
+                    <div class="option-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h4>Environmental Protection</h4>
+                    <p>Specialized monitoring for climate, wildlife, and environmental sensors</p>
+                    <button class="btn-select">Select Environmental</button>
+                </div>
+            </div>
+           
+            <div class="protection-display" id="detailedInfo" style="display: none;">
+                <!-- Detailed content will be shown here after selection -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Device Popups -->
+    <div class="device-popup" id="devicePopup">
+        <div class="device-popup-content">
+            <button class="device-popup-close" id="devicePopupClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3><i class="fas fa-scroll"></i> Device Logs</h3>
+            <div class="device-popup-logs" id="deviceLogs">
+                <p>2025-06-15 08:23:45 - Device connected</p>
+                <p>2025-06-15 08:24:12 - Initializing sensors</p>
+                <p class="warning">2025-06-15 08:25:03 - Warning: Temperature fluctuation detected</p>
+                <p>2025-06-15 08:30:45 - Data transmission started</p>
+                <p class="error">2025-06-15 08:32:18 - Error: Connection timeout</p>
+                <p>2025-06-15 08:32:45 - Reconnected to network</p>
+                <p class="success">2025-06-15 08:33:10 - All systems normal</p>
+                <p>2025-06-15 08:45:22 - Regular data transmission</p>
+                <p class="warning">2025-06-15 08:50:15 - Warning: High humidity reading</p>
+                <p>2025-06-15 09:00:00 - Scheduled maintenance check</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Isolate Device Popup -->
+    <div class="device-popup" id="isolatePopup">
+        <div class="device-popup-content">
+            <button class="device-popup-close" id="isolatePopupClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3><i class="fas fa-network-wired"></i> Isolate Device</h3>
+            <p>Are you sure you want to isolate this device from the network?</p>
+            <p class="warning"><i class="fas fa-exclamation-triangle"></i> Warning: This will disconnect the device from all network communications until manually reconnected.</p>
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn-sm" style="background: var(--danger);" id="confirmIsolate">
+                    <i class="fas fa-plug"></i> Confirm Isolation
+                </button>
+                <button class="btn-sm" id="cancelIsolate">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <h1>IoTGuardAI</h1>
+        </div>
+        <div class="nav-links">
+            <a href="main.html">Home</a>
+            <a href="#" id="dashboardLink">Dashboard</a>
+            <a href="#features">Features</a>
+            <a href="about.html">About</a>
+            <a href="contactus.html">Contact</a>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>AI-Enhanced Security for IoT Systems</h2>
+            <p>Advanced threat detection and prevention for environmental and industrial IoT networks using cutting-edge artificial intelligence and real-time monitoring.</p>
+            <a href="#" class="btn" id="viewDashboardBtn">View Dashboard</a>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard">
+        <div class="section-title">
+            <h2>Security Dashboard</h2>
+            <p>Real-time monitoring and threat detection across all connected IoT devices</p>
+        </div>
+       
+        <!-- Demo Mode Toggle -->
+        <div class="demo-controls">
+            <label class="switch">
+                <input type="checkbox" id="demo-mode">
+                <span class="slider"></span>
+            </label>
+            <span>Demo Mode</span>
+        </div>
+       
+        <!-- Admin Panel -->
+        <div class="admin-panel">
+            <h3><i class="fas fa-sms"></i> Emergency SMS Configuration</h3>
+            <p>Add administrator phone numbers to receive emergency SMS alerts (include country code, e.g., +8801886408639)</p>
+           
+            <div class="phone-inputs" id="phoneInputs">
+                <!-- Phone inputs will be added here dynamically -->
+            </div>
+           
+            <button class="add-phone-btn" id="addPhoneBtn">
+                <i class="fas fa-plus"></i> Add Another Number
+            </button>
+           
+            <button class="save-config-btn" id="saveConfigBtn">
+                <i class="fas fa-save"></i> Save Configuration
+            </button>
+           
+            <div class="sms-status" id="smsStatus">
+                <i class="fas fa-check-circle"></i> SMS configuration saved successfully!
+            </div>
+           
+            <!-- File Upload Section -->
+            <div class="file-upload-section">
+                <h3><i class="fas fa-file-upload"></i> Upload Security Documents</h3>
+                <p>Upload security protocols, device manuals, or other relevant documents for your IoT systems</p>
+                <label for="fileInput" class="file-upload-btn">
+                    <i class="fas fa-cloud-upload-alt"></i> Choose File
+                </label>
+                <input type="file" id="fileInput" multiple>
+                <div class="uploaded-files" id="uploadedFiles">
+                    <!-- Uploaded files will appear here -->
+                </div>
+            </div>
+        </div>
+       
+        <!-- Bangladesh Industrial & Environmental Analytics -->
+        <div class="analytics-section">
+            <div class="analytics-header">
+                <h3><i class="fas fa-chart-bar"></i> Bangladesh IoT Security Analytics</h3>
+            </div>
+           
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h4>Industrial Security Threats (2023)</h4>
+                    <div class="analytics-chart">
+                        <canvas id="industrialChart"></canvas>
+                    </div>
+                    <p>Recent months show increased cyber attacks on Bangladesh's growing industrial IoT infrastructure, particularly in textile and manufacturing sectors.</p>
+                </div>
+               
+                <div class="analytics-card">
+                    <h4>Environmental Sensor Threats</h4>
+                    <div class="analytics-chart">
+                        <canvas id="environmentalChart"></canvas>
+                    </div>
+                    <p>Flood monitoring systems and air quality sensors are primary targets due to Bangladesh's vulnerability to climate change impacts.</p>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Dashboard Rows -->
+        <div class="dashboard-row">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Security Alerts</h3>
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="alert-content">
+                            <h4>Unauthorized Access Detected</h4>
+                            <p>Industrial control system - 2 minutes ago</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="alert-content">
+                            <h4>Suspicious Data Tampering</h4>
+                            <p>Environmental sensor network - 15 minutes ago</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="alert-content">
+                            <h4>Threat Neutralized</h4>
+                            <p>Malware blocked - 30 minutes ago</p>
+                        </div>
+                    </div>
+                    <div class="alert-details" id="alertDetails">
+                        <h4>Threat Details</h4>
+                        <div class="detail-item">
+                            <span>Source IP:</span>
+                            <span id="threat-ip">192.168.1.45</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Location:</span>
+                            <span id="threat-location">Dhaka, Bangladesh</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Target Device:</span>
+                            <span id="threat-device">Industrial Sensor #42</span>
+                        </div>
+                        <button class="btn-sm" id="isolate-threat">
+                            <i class="fas fa-network-wired"></i> Isolate Device
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>System Status</h3>
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="card-body">
+                    <div class="status-item">
+                        <p>Industrial IoT Network</p>
+                        <div class="status-indicator">
+                            <div class="indicator indicator-danger"></div>
+                            <span>Compromised</span>
+                        </div>
+                    </div>
+                    <div class="status-item" style="margin: 1rem 0;">
+                        <p>Environmental Sensors</p>
+                        <div class="status-indicator">
+                            <div class="indicator indicator-warning"></div>
+                            <span>At Risk</span>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <p>AI Protection</p>
+                        <div class="status-indicator">
+                            <div class="indicator indicator-success"></div>
+                            <span>Active</span>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Device Management -->
+        <div class="dashboard-row">
+            <div class="dashboard-card" style="margin: 0 auto; max-width: 600px; grid-column: 1 / -1;">
+                <div class="card-header">
+                    <h3>Device Management</h3>
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div class="card-body">
+                    <div class="device-list">
+                        <div class="device-item">
+                            <div class="device-info">
+                                <i class="fas fa-temperature-low"></i>
+                                <span>Temperature Sensor #1</span>
+                            </div>
+                            <div class="device-actions">
+                                <button class="btn-icon view-logs-btn" title="View logs" data-device="Temperature Sensor #1">
+                                    <i class="fas fa-scroll"></i>
+                                </button>
+                                <button class="btn-icon isolate-btn" title="Isolate" data-device="Temperature Sensor #1">
+                                    <i class="fas fa-plug"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-info">
+                                <i class="fas fa-tint"></i>
+                                <span>Humidity Sensor #3</span>
+                            </div>
+                            <div class="device-actions">
+                                <button class="btn-icon view-logs-btn" title="View logs" data-device="Humidity Sensor #3">
+                                    <i class="fas fa-scroll"></i>
+                                </button>
+                                <button class="btn-icon isolate-btn" title="Isolate" data-device="Humidity Sensor #3">
+                                    <i class="fas fa-plug"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-info">
+                                <i class="fas fa-industry"></i>
+                                <span>PLC Controller #2</span>
+                            </div>
+                            <div class="device-actions">
+                                <button class="btn-icon view-logs-btn" title="View logs" data-device="PLC Controller #2">
+                                    <i class="fas fa-scroll"></i>
+                                </button>
+                                <button class="btn-icon isolate-btn" title="Isolate" data-device="PLC Controller #2">
+                                    <i class="fas fa-plug"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Threat Activity Map -->
+        <div class="dashboard-row">
+            <div class="dashboard-card threat-map">
+                <div class="card-header">
+                    <h3>Threat Activity Map</h3>
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="threat-point" style="top: 30%; left: 25%;"></div>
+                <div class="threat-point" style="top: 45%; left: 60%;"></div>
+                <div class="threat-point" style="top: 70%; left: 40%;"></div>
+                <div class="threat-point" style="top: 20%; left: 75%;"></div>
+                <div class="threat-point" style="top: 65%; left: 75%;"></div>
+                <div class="threat-point" style="top: 35%; left: 45%;"></div>
+            </div>
+        </div>
+       
+        <!-- Enhanced Protection Status -->
+        <div class="dashboard-row">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Protection Status</h3>
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="card-body">
+                    <div class="protection-item">
+                        <h4>Industrial Systems <span>65% protected</span></h4>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 65%; background-color: var(--danger);"></div>
+                        </div>
+                        <p>Critical vulnerabilities detected in 35% of industrial IoT devices. Immediate firmware updates recommended.</p>
+                    </div>
+                   
+                    <div class="protection-item">
+                        <h4>Environmental Sensors <span>80% protected</span></h4>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 80%; background-color: var(--warning);"></div>
+                        </div>
+                        <p>Flood monitoring systems show improved security but still vulnerable to data interception.</p>
+                    </div>
+                   
+                    <div class="protection-item">
+                        <h4>AI Defense <span>95% effective</span></h4>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 95%; background-color: var(--success);"></div>
+                        </div>
+                        <p>AI threat detection successfully blocked 95% of intrusion attempts last month.</p>
+                    </div>
+                   
+                    <div class="protection-item">
+                        <h4>Network Encryption <span>88% coverage</span></h4>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 88%; background-color: var(--success);"></div>
+                        </div>
+                        <p>12% of legacy devices still using unencrypted protocols. Upgrade recommended.</p>
+                    </div>
+                   
+                    <div class="protection-item">
+                        <h4>Firewall Protection <span>92% coverage</span></h4>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 92%; background-color: var(--success);"></div>
+                        </div>
+                        <p>Firewall rules updated to block 92% of known attack vectors in Bangladesh region.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Security Event History</h3>
+                    <div class="time-filter">
+                        <select id="history-range">
+                            <option>Last 24 hours</option>
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body" id="historyContainer">
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-title">Unauthorized Access Attempt</span>
+                            <span class="history-time">Today, 14:32</span>
+                        </div>
+                        <div class="history-details">
+                            Blocked unauthorized login attempt from IP 192.168.1.105 targeting industrial control system
+                        </div>
+                        <span class="history-severity severity-high">High Severity</span>
+                    </div>
+                   
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-title">Temperature Alert</span>
+                            <span class="history-time">Today, 12:45</span>
+                        </div>
+                        <div class="history-details">
+                            Temperature exceeded threshold (42°C) in manufacturing zone 3. Cooling system activated.
+                        </div>
+                        <span class="history-severity severity-medium">Medium Severity</span>
+                    </div>
+                   
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-title">Device Connected</span>
+                            <span class="history-time">Today, 11:18</span>
+                        </div>
+                        <div class="history-details">
+                            New environmental sensor (ID: ES-42) connected to network and authenticated successfully.
+                        </div>
+                        <span class="history-severity severity-low">Info</span>
+                    </div>
+                   
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-title">Firmware Update</span>
+                            <span class="history-time">Yesterday, 08:30</span>
+                        </div>
+                        <div class="history-details">
+                            Successfully updated firmware on 12 industrial controllers to version 2.4.1
+                        </div>
+                        <span class="history-severity severity-low">Info</span>
+                    </div>
+                   
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-title">Network Anomaly</span>
+                            <span class="history-time">Yesterday, 03:15</span>
+                        </div>
+                        <div class="history-details">
+                            Detected unusual network traffic pattern from sensor node #24. Isolated for investigation.
+                        </div>
+                        <span class="history-severity severity-medium">Medium Severity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- AI Recommendations -->
+        <div class="dashboard-row center-recommendations">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>AI Recommendations</h3>
+                    <i class="fas fa-robot"></i>
+                    <button class="btn-pdf" id="downloadPdf">
+                        <i class="fas fa-file-pdf"></i> Download Report
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="recommendation">
+                        <i class="fas fa-fire-extinguisher"></i>
+                        <div class="recommendation-content">
+                            <h4>Emergency Protocol Activation</h4>
+                            <p>AI detected potential fire hazard in Dhaka industrial zone. Activate emergency protocols for 5 at-risk facilities.</p>
+                            <div class="recommendation-actions">
+                                <button class="recommendation-btn implement" title="Apply this recommendation immediately">
+                                    <i class="fas fa-check"></i> Implement
+                                </button>
+                                <button class="recommendation-btn review" title="Review detailed analysis before implementing">
+                                    <i class="fas fa-search"></i> Review
+                                </button>
+                                <button class="recommendation-btn details" title="View technical details and justification">
+                                    <i class="fas fa-info"></i> Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-flood"></i>
+                        <div class="recommendation-content">
+                            <h4>Flood Sensor Calibration</h4>
+                            <p>Monsoon season approaching - calibrate flood sensors in coastal regions of Bangladesh.</p>
+                            <div class="recommendation-actions">
+                                <button class="recommendation-btn implement" title="Apply this recommendation immediately">
+                                    <i class="fas fa-check"></i> Implement
+                                </button>
+                                <button class="recommendation-btn review" title="Review detailed analysis before implementing">
+                                    <i class="fas fa-search"></i> Review
+                                </button>
+                                <button class="recommendation-btn details" title="View technical details and justification">
+                                    <i class="fas fa-info"></i> Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-user-shield"></i>
+                        <div class="recommendation-content">
+                            <h4>Access Control Review</h4>
+                            <p>3 admin accounts with excessive privileges detected in Chittagong industrial network.</p>
+                            <div class="recommendation-actions">
+                                <button class="recommendation-btn implement" title="Apply this recommendation immediately">
+                                    <i class="fas fa-check"></i> Implement
+                                </button>
+                                <button class="recommendation-btn review" title="Review detailed analysis before implementing">
+                                    <i class="fas fa-search"></i> Review
+                                </button>
+                                <button class="recommendation-btn details" title="View technical details and justification">
+                                    <i class="fas fa-info"></i> Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Advanced Security Features</h2>
+            <p>Our comprehensive security solutions protect your IoT infrastructure from all angles</p>
+        </div>
+       
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI Threat Detection</h3>
+                <p>Machine learning algorithms analyze patterns to detect and prevent emerging threats before they impact your systems.</p>
+            </div>
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <h3>Real-time Protection</h3>
+                <p>24/7 monitoring with instant alerts and automated responses to security incidents as they occur.</p>
+            </div>
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>Network Hardening</h3>
+                <p>Secure communication channels and encrypted data transmission between all IoT devices and servers.</p>
+            </div>
+           
+            <!-- New middle row with climate and wildlife features -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-temperature-high"></i>
+                </div>
+                <h3>Climate Change Impact</h3>
+                <p><strong>Temperature Spike Detected</strong></p>
+                <p>Unusual temperature rise detected via IoT sensors.</p>
+            </div>
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-dove"></i>
+                </div>
+                <h3>Biodiversity Threats</h3>
+                <p><strong>Species Migration Disruption</strong></p>
+                <p>AI flagged abnormal changes in animal migration.</p>
+            </div>
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <h3>Wildlife Protection</h3>
+                <p><strong>Poaching Risk Detected</strong></p>
+                <p>Suspicious activity spotted near protected area.</p>
+            </div>
+            <!-- End of new middle row -->
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>Access Control</h3>
+                <p>Multi-factor authentication and role-based permissions to ensure only authorized personnel can access critical systems.</p>
+            </div>
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Behavior Analytics</h3>
+                <p>Establish baselines for normal device behavior and detect anomalies that may indicate compromise.</p>
+            </div>
+           
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Secure Updates</h3>
+                <p>Cryptographically signed firmware updates with rollback protection to prevent malicious code injection.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats" id="about">
+        <div class="section-title">
+            <h2>Our Security Impact</h2>
+            <p>Trusted by industrial and environmental organizations worldwide</p>
+        </div>
+       
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="stat1">0%</div>
+                <p>Threat Detection Rate</p>
+            </div>
+           
+            <div class="stat-card">
+                <div class="stat-number" id="stat2">0/0</div>
+                <p>Monitoring Coverage</p>
+            </div>
+           
+            <div class="stat-card">
+                <div class="stat-number" id="stat3">0</div>
+                <p>Protected Devices</p>
+            </div>
+           
+            <div class="stat-card">
+                <div class="stat-number" id="stat4">0.0%</div>
+                <p>System Uptime</p>
+            </div>
+           
+            <div class="stat-card">
+                <div class="stat-number" id="stat5">0s</div>
+                <p>Average Response Time</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SMS Notification -->
+    <div class="sms-notification" id="smsNotification">
+        <div class="sms-notification-header">
+            <h4><i class="fas fa-sms"></i> SMS Alert Sent</h4>
+            <button class="sms-notification-close" id="smsNotificationClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sms-notification-body" id="smsNotificationBody">
+            Emergency SMS sent to all registered administrators.
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>IoTGuardAI</h3>
+                <p>Advanced AI-powered security solutions for industrial and environmental IoT systems.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+           
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="main.html"><i class="fas fa-chevron-right"></i> Home</a>
+                    <a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a>
+                    <a href="#features"><i class="fas fa-chevron-right"></i> Features</a>
+                    <a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a>
+                    <a href="contactus.html"><i class="fas fa-chevron-right"></i> Contact</a>
+                </div>
+            </div>
+           
+            <div class="footer-column">
+                <h3>Services</h3>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-chevron-right"></i> Threat Detection</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Anomaly Monitoring</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Emergency Alerts</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> System Hardening</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Security Audits</a>
+                </div>
+            </div>
+           
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <div class="footer-contact">
+                    <p><i class="fas fa-map-marker-alt"></i> 4318, Sonaichhari, Kumira, Bangladesh</p>
+                    <p><i class="fas fa-phone"></i> +880 1886-408639</p>
+                    <p><i class="fas fa-envelope"></i> support@iotguardai.com</p>
+                </div>
+               
+                <div class="newsletter">
+                    <p>Subscribe to our security newsletter</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+       
+        <div class="footer-bottom">
+            <div class="footer-logo">
+                <h2>IoTGuardAI</h2>
+            </div>
+            <p>© 2025 IoTGuardAI. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Audio elements and controls
+        const alertSound = document.getElementById('alertSound');
+        const audioControls = document.getElementById('audioControls');
+        const muteAlarmBtn = document.getElementById('muteAlarmBtn');
+        const muteAlarm = document.getElementById('muteAlarm');
+       
+        // Password protection
+        const passwordOverlay = document.getElementById('passwordOverlay');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordBtn = document.getElementById('passwordBtn');
+        const passwordError = document.getElementById('passwordError');
+        const togglePassword = document.getElementById('togglePassword');
+        const unauthorizedAccess = document.getElementById('unauthorizedAccess');
+       
+        const CORRECT_PASSWORD = "2AFW69";
+        let failedAttempts = 0;
+        const MAX_ATTEMPTS = 3;
+       
+        // Check if already authenticated
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            passwordOverlay.classList.add('hidden');
+        }
+       
+        // Toggle password visibility
+        togglePassword.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }
+        });
+       
+        // Handle password submission
+        passwordBtn.addEventListener('click', function() {
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                // Correct password - grant access
+                sessionStorage.setItem('authenticated', 'true');
+                passwordOverlay.classList.add('hidden');
+            } else {
+                // Play alert sound
+                playAlertSound();
+               
+                // Show audio controls
+                audioControls.style.display = 'flex';
+               
+                failedAttempts++;
+                passwordError.style.display = 'block';
+                passwordInput.focus();
+               
+                if (failedAttempts >= MAX_ATTEMPTS) {
+                    // Too many failed attempts - lock access and send alerts
+                    playAlertSound();
+                   
+                    passwordOverlay.style.display = 'none';
+                    unauthorizedAccess.style.display = 'flex';
+                   
+                    const message = `EMERGENCY: ${failedAttempts} failed login attempts detected on IoTGuardAI dashboard from IP ${generateFakeIP()}. Possible unauthorized access attempt in progress.`;
+                    sendEmergencySMS(message);
+                   
+                    sendWhatsAppAlert();
+                   
+                    console.log(`Security breach: ${failedAttempts} failed login attempts`);
+                }
+            }
+        });
+       
+        // Handle Enter key in password field
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                passwordBtn.click();
+            }
+        });
+       
+        // Mute alarm buttons
+        if (muteAlarmBtn) {
+            muteAlarmBtn.addEventListener('click', function() {
+                alertSound.pause();
+                alertSound.currentTime = 0;
+                this.innerHTML = '<i class="fas fa-volume-mute"></i> Alarm Muted';
+                this.style.backgroundColor = 'var(--success)';
+            });
+        }
+       
+        if (muteAlarm) {
+            muteAlarm.addEventListener('click', function() {
+                alertSound.pause();
+                alertSound.currentTime = 0;
+                this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                this.style.backgroundColor = 'var(--success)';
+            });
+        }
+
+        // Play alert sound with error handling
+        function playAlertSound() {
+            alertSound.volume = 0.5;
+            const playPromise = alertSound.play();
+           
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    audioControls.style.display = 'flex';
+                    console.log("Playback prevented:", error);
+                });
+            }
+        }
+
+        // Generate a fake IP for demo purposes
+        function generateFakeIP() {
+            return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+        }
+
+        function sendWhatsAppAlert() {
+            console.log('WhatsApp alert sent to security team about unauthorized access attempt');
+            // In a real implementation, this would use the WhatsApp API
+        }
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ?
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Phone number management
+        const phoneInputs = document.getElementById('phoneInputs');
+        const addPhoneBtn = document.getElementById('addPhoneBtn');
+        const saveConfigBtn = document.getElementById('saveConfigBtn');
+        const smsStatus = document.getElementById('smsStatus');
+
+        // Load saved numbers from localStorage
+        let adminNumbers = JSON.parse(localStorage.getItem('iotGuardAIAdminNumbers')) || [];
+
+        // Render phone inputs based on saved numbers
+        function renderPhoneInputs() {
+            phoneInputs.innerHTML = '';
+           
+            if (adminNumbers.length === 0) {
+                adminNumbers = ['']; // Start with one empty input
+            }
+           
+            adminNumbers.forEach((number, index) => {
+                const phoneInput = document.createElement('div');
+                phoneInput.className = 'phone-input';
+                phoneInput.innerHTML = `
+                    <input type="tel" placeholder="+880 1886-408639" value="${number}"
+                           data-index="${index}" class="phone-number">
+                    <button class="remove-phone" data-index="${index}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                phoneInputs.appendChild(phoneInput);
+            });
+           
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-phone').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    adminNumbers.splice(index, 1);
+                    renderPhoneInputs();
+                });
+            });
+        }
+
+        // Add new phone input
+        addPhoneBtn.addEventListener('click', function() {
+            adminNumbers.push('');
+            renderPhoneInputs();
+           
+            // Scroll to the new input
+            phoneInputs.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Save configuration
+        saveConfigBtn.addEventListener('click', function() {
+            // Update adminNumbers array with current values
+            document.querySelectorAll('.phone-number').forEach(input => {
+                const index = parseInt(input.getAttribute('data-index'));
+                adminNumbers[index] = input.value.trim();
+            });
+           
+            // Remove empty entries
+            adminNumbers = adminNumbers.filter(num => num !== '');
+           
+            // Save to localStorage
+            localStorage.setItem('iotGuardAIAdminNumbers', JSON.stringify(adminNumbers));
+           
+            // Show success message
+            smsStatus.style.display = 'flex';
+            setTimeout(() => {
+                smsStatus.style.display = 'none';
+            }, 3000);
+           
+            // Warn if no numbers are configured
+            if (adminNumbers.length === 0) {
+                alert('Warning: No emergency numbers configured. SMS alerts will not be sent.');
+            }
+        });
+
+        // Initialize phone inputs
+        renderPhoneInputs();
+
+        // Function to send SMS via Twilio API
+        async function sendEmergencySMS(message) {
+            // Get saved numbers
+            const numbers = JSON.parse(localStorage.getItem('iotGuardAIAdminNumbers')) || [];
+           
+            if (numbers.length === 0) {
+                console.log('No emergency numbers configured. SMS not sent.');
+                return;
+            }
+           
+            try {
+                // In a real implementation, you would call your backend API
+                // which would then use the Twilio API to send SMS
+                // This is a simulation of that process
+               
+                console.log('Sending emergency SMS to:', numbers);
+                console.log('Message:', message);
+               
+                // Show SMS notification
+                showSMSNotification(message);
+               
+                // Play alert sound for emergency
+                alertSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-alarm-996.mp3";
+                alertSound.loop = false;
+                playAlertSound();
+               
+            } catch (error) {
+                console.error('Error sending SMS:', error);
+                alert('Failed to send emergency SMS. Check console for details.');
+            }
+        }
+
+        function showSMSNotification(message) {
+            const notification = document.getElementById('smsNotification');
+            const notificationBody = document.getElementById('smsNotificationBody');
+           
+            notificationBody.textContent = message || 'Emergency SMS sent to all registered administrators.';
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Close SMS notification
+        document.getElementById('smsNotificationClose').addEventListener('click', function() {
+            document.getElementById('smsNotification').classList.remove('show');
+        });
+
+        // Alert details toggle
+        document.querySelectorAll('.alert').forEach(alert => {
+            alert.addEventListener('click', function() {
+                const details = document.getElementById('alertDetails');
+                details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+
+        // Isolate threat button
+        document.getElementById('isolate-threat').addEventListener('click', function() {
+            alert('Device isolation command sent. The suspicious device will be disconnected from the network.');
+            this.innerHTML = '<i class="fas fa-check"></i> Isolated';
+            this.style.backgroundColor = 'var(--success)';
+        });
+
+        // Demo mode toggle
+        const demoModeToggle = document.getElementById('demo-mode');
+        let demoInterval;
+
+        demoModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Start demo mode
+                demoInterval = setInterval(simulateRealTimeData, 3000);
+                simulateRealTimeData(); // Run immediately
+            } else {
+                // Stop demo mode
+                clearInterval(demoInterval);
+            }
+        });
+
+        // Simulate real-time data changes
+        function simulateRealTimeData() {
+            if (!demoModeToggle.checked) return;
+           
+            // Rotate threat levels through realistic scenarios
+            const scenarios = [
+                { industrial: 'danger', environmental: 'warning', ai: 'success' },
+                { industrial: 'warning', environmental: 'danger', ai: 'success' },
+                { industrial: 'success', environmental: 'warning', ai: 'warning' }
+            ];
+           
+            const currentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+           
+            // Update status indicators based on scenario
+            document.querySelectorAll('.status-indicator')[0].innerHTML = `
+                <div class="indicator indicator-${currentScenario.industrial}"></div>
+                <span>${currentScenario.industrial === 'danger' ? 'Compromised' :
+                         currentScenario.industrial === 'warning' ? 'At Risk' : 'Secure'}</span>
+            `;
+           
+            document.querySelectorAll('.status-indicator')[1].innerHTML = `
+                <div class="indicator indicator-${currentScenario.environmental}"></div>
+                <span>${currentScenario.environmental === 'danger' ? 'Compromised' :
+                         currentScenario.environmental === 'warning' ? 'At Risk' : 'Secure'}</span>
+            `;
+           
+            // Move threat points randomly
+            document.querySelectorAll('.threat-point').forEach(point => {
+                const newX = Math.random() * 90 + 5;
+                const newY = Math.random() * 90 + 5;
+                point.style.left = `${newX}%`;
+                point.style.top = `${newY}%`;
+            });
+           
+            // Occasionally add new alerts
+            if (Math.random() > 0.7) {
+                const alertTypes = ['danger', 'warning', 'info'];
+                const alertIcons = {
+                    'danger': 'fa-exclamation-triangle',
+                    'warning': 'fa-exclamation-circle',
+                    'info': 'fa-info-circle'
+                };
+                const alertMessages = {
+                    'danger': ['Unauthorized Access', 'Malware Detected', 'Data Breach Attempt'],
+                    'warning': ['Suspicious Activity', 'Anomaly Detected', 'Unusual Traffic'],
+                    'info': ['System Update', 'New Device Connected', 'Configuration Change']
+                };
+               
+                const randomType = alertTypes[Math.floor(Math.random() * alertTypes.length)];
+                const randomMessage = alertMessages[randomType][Math.floor(Math.random() * alertMessages[randomType].length)];
+               
+                const newAlert = document.createElement('div');
+                newAlert.className = `alert alert-${randomType}`;
+                newAlert.innerHTML = `
+                    <i class="fas ${alertIcons[randomType]}"></i>
+                    <div class="alert-content">
+                        <h4>${randomMessage}</h4>
+                        <p>${new Date().toLocaleTimeString()} - ${randomType === 'danger' ? 'Industrial systems' : 'Environmental sensors'}</p>
+                    </div>
+                `;
+               
+                // Add to top of alerts container
+                const alertsContainer = document.querySelector('.card-body');
+                alertsContainer.insertBefore(newAlert, alertsContainer.firstChild);
+               
+                // Send SMS for high priority alerts
+                if (randomType === 'danger') {
+                    const threatMessage = `URGENT: ${randomMessage} detected in ${randomType === 'danger' ? 'industrial systems' : 'environmental sensors'} at ${new Date().toLocaleTimeString()}. Please check IoTGuardAI dashboard immediately.`;
+                    sendEmergencySMS(threatMessage);
+                }
+            }
+        }
+
+        // Request notification permission
+        if (Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+
+        // Initialize dashboard components when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize status chart
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+                    datasets: [{
+                        label: 'Threat Level',
+                        data: [12, 19, 3, 5, 2, 3, 15, 8],
+                        borderColor: 'rgba(255, 77, 77, 1)',
+                        backgroundColor: 'rgba(255, 77, 77, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+           
+            // Initialize industrial chart with Bangladesh-specific data
+            const industrialCtx = document.getElementById('industrialChart').getContext('2d');
+            const industrialChart = new Chart(industrialCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Textile (Bangladesh)', 'Manufacturing', 'Energy', 'Transport', 'Agriculture'],
+                    datasets: [{
+                        label: 'Security Incidents',
+                        data: [65, 32, 28, 19, 15], // Higher value for textile industry
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)', // Highlight Bangladesh's textile industry
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+           
+            // Initialize environmental chart
+            const environmentalCtx = document.getElementById('environmentalChart').getContext('2d');
+            const environmentalChart = new Chart(environmentalCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Flood Sensors', 'Air Quality', 'Water Quality', 'Seismic Monitors'],
+                    datasets: [{
+                        label: 'Threat Level',
+                        data: [85, 65, 45, 60, 30],
+                        backgroundColor: 'rgba(136, 211, 206, 0.2)',
+                        borderColor: 'rgba(136, 211, 206, 1)',
+                        pointBackgroundColor: 'rgba(136, 211, 206, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(136, 211, 206, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            pointLabels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(0, 0, 0, 0)',
+                                color: 'rgba(255, 255, 255, 0.5)',
+                                showLabelBackdrop: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Device logs popup
+            const devicePopup = document.getElementById('devicePopup');
+            const devicePopupClose = document.getElementById('devicePopupClose');
+            const viewLogsBtns = document.querySelectorAll('.view-logs-btn');
+           
+            viewLogsBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const deviceName = this.getAttribute('data-device');
+                    document.querySelector('#devicePopup h3').innerHTML = `<i class="fas fa-scroll"></i> ${deviceName} Logs`;
+                    devicePopup.classList.add('active');
+                });
+            });
+           
+            devicePopupClose.addEventListener('click', function() {
+                devicePopup.classList.remove('active');
+            });
+           
+            // Device isolation popup
+            const isolatePopup = document.getElementById('isolatePopup');
+            const isolatePopupClose = document.getElementById('isolatePopupClose');
+            const confirmIsolate = document.getElementById('confirmIsolate');
+            const cancelIsolate = document.getElementById('cancelIsolate');
+            const isolateBtns = document.querySelectorAll('.isolate-btn');
+           
+            isolateBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const deviceName = this.getAttribute('data-device');
+                    document.querySelector('#isolatePopup h3').innerHTML = `<i class="fas fa-network-wired"></i> Isolate ${deviceName}`;
+                    isolatePopup.classList.add('active');
+                });
+            });
+           
+            isolatePopupClose.addEventListener('click', function() {
+                isolatePopup.classList.remove('active');
+            });
+           
+            cancelIsolate.addEventListener('click', function() {
+                isolatePopup.classList.remove('active');
+            });
+           
+            confirmIsolate.addEventListener('click', function() {
+                alert('Device isolation command sent. The device will be disconnected from the network.');
+                isolatePopup.classList.remove('active');
+            });
+           
+            // Industry/Environment Info Popup
+            const infoPopup = document.getElementById('infoPopup');
+            const infoPopupClose = document.getElementById('infoPopupClose');
+            const selectionOptions = document.getElementById('selectionOptions');
+            const detailedInfo = document.getElementById('detailedInfo');
+           
+            // Show popup when clicking View Dashboard
+            document.getElementById('viewDashboardBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                // Reset to show selection options
+                selectionOptions.style.display = 'grid';
+                detailedInfo.style.display = 'none';
+                infoPopup.classList.add('active');
+            });
+           
+            // Also make the dashboard link in nav show the popup
+            document.getElementById('dashboardLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                // Reset to show selection options
+                selectionOptions.style.display = 'grid';
+                detailedInfo.style.display = 'none';
+                infoPopup.classList.add('active');
+            });
+           
+            // Close popup when clicking close button
+            infoPopupClose.addEventListener('click', function() {
+                infoPopup.classList.remove('active');
+            });
+
+            // Handle industrial/environmental selection
+            document.getElementById('industrialOption').addEventListener('click', function() {
+                selectionOptions.style.display = 'none';
+                detailedInfo.style.display = 'flex';
+                detailedInfo.innerHTML = `
+                    <div class="protection-info">
+                        <h3><i class="fas fa-industry"></i> Industrial Protection Activated</h3>
+                        <p>Our AI system is now monitoring your industrial IoT devices for:</p>
+                        <ul>
+                            <li><i class="fas fa-shield-alt"></i> Unauthorized access attempts</li>
+                            <li><i class="fas fa-chart-line"></i> Abnormal sensor readings</li>
+                            <li><i class="fas fa-network-wired"></i> Network intrusions</li>
+                            <li><i class="fas fa-cogs"></i> Equipment malfunctions</li>
+                            <li><i class="fas fa-fire"></i> Fire and safety hazards</li>
+                            <li><i class="fas fa-bolt"></i> Power fluctuations</li>
+                        </ul>
+                        <button class="btn" id="proceedToDashboard" style="margin-top: 1rem;">
+                            <i class="fas fa-tachometer-alt"></i> Proceed to Industrial Dashboard
+                        </button>
+                    </div>
+                    <div class="protection-image">
+                        <img src="https://images.unsplash.com/photo-1513828583688-c52646db42da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Industrial IoT">
+                    </div>
+                `;
+               
+                // Add event listener to proceed button
+                document.getElementById('proceedToDashboard').addEventListener('click', function() {
+                    infoPopup.classList.remove('active');
+                });
+            });
+
+            document.getElementById('environmentalOption').addEventListener('click', function() {
+                selectionOptions.style.display = 'none';
+                detailedInfo.style.display = 'flex';
+                detailedInfo.innerHTML = `
+                    <div class="protection-info">
+                        <h3><i class="fas fa-leaf"></i> Environmental Protection Activated</h3>
+                        <p>We're now safeguarding your environmental monitoring systems against:</p>
+                        <ul>
+                            <li><i class="fas fa-tint"></i> Flood monitoring anomalies</li>
+                            <li><i class="fas fa-wind"></i> Air quality data tampering</li>
+                            <li><i class="fas fa-temperature-high"></i> Climate change impacts</li>
+                        
+                            <li><i class="fas fa-tree"></i> Deforestation monitoring</li>
+                            <li><i class="fas fa-water"></i> Water pollution detection</li>
+                        </ul>
+                        <button class="btn" id="proceedToDashboard" style="margin-top: 1rem;">
+                            <i class="fas fa-tachometer-alt"></i> Proceed to Environmental Dashboard
+                        </button>
+                    </div>
+                    <div class="protection-image">
+                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Environmental Monitoring">
+                    </div>
+                `;
+               
+                // Add event listener to proceed button
+                document.getElementById('proceedToDashboard').addEventListener('click', function() {
+                    infoPopup.classList.remove('active');
+                });
+            });
+           
+            // PDF Report Download
+            document.getElementById('downloadPdf').addEventListener('click', function() {
+                // In a real implementation, this would generate a PDF report
+                // For demo purposes, we'll simulate it
+               
+                const notification = document.createElement('div');
+                notification.className = 'sms-notification show';
+                notification.innerHTML = `
+                    <div class="sms-notification-header">
+                        <h4><i class="fas fa-file-pdf"></i> Report Generated</h4>
+                        <button class="sms-notification-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="sms-notification-body">
+                        Security report PDF generated successfully. Download will start shortly.
+                    </div>
+                `;
+               
+                document.body.appendChild(notification);
+               
+                // Simulate download
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = '#'; // In real implementation, this would be the PDF URL
+                    link.download = 'IoTGuardAI-Security-Report.pdf';
+                    link.click();
+                   
+                    notification.querySelector('.sms-notification-close').addEventListener('click', function() {
+                        notification.remove();
+                    });
+                   
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 5000);
+                }, 1500);
+            });
+           
+            // Enhanced recommendation buttons
+            document.querySelectorAll('.recommendation-btn.details').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const recommendation = this.closest('.recommendation-content').querySelector('h4').textContent;
+                    const details = this.closest('.recommendation-content').querySelector('p').textContent;
+                   
+                    // Create a detailed popup
+                    const detailPopup = document.createElement('div');
+                    detailPopup.className = 'info-popup active';
+                    detailPopup.innerHTML = `
+                        <div class="info-popup-content">
+                            <button class="info-popup-close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <h3><i class="fas fa-info-circle"></i> ${recommendation}</h3>
+                            <p>${details}</p>
+                           
+                            <h4 style="margin-top: 1.5rem;">Technical Details</h4>
+                            <p>This recommendation is based on:</p>
+                            <ul>
+                                <li>Recent threat intelligence updates</li>
+                                <li>Pattern analysis of similar incidents</li>
+                                <li>Device behavior baselines</li>
+                                <li>Network traffic anomalies</li>
+                            </ul>
+                           
+                            <h4 style="margin-top: 1.5rem;">Implementation Steps</h4>
+                            <ol>
+                                <li>Review the affected systems</li>
+                                <li>Schedule a maintenance window if needed</li>
+                                <li>Apply the recommended changes</li>
+                                <li>Verify system stability</li>
+                                <li>Monitor for any unexpected behavior</li>
+                            </ol>
+                           
+                            <button class="btn" style="margin-top: 1.5rem;">
+                                <i class="fas fa-check"></i> Acknowledge
+                            </button>
+                        </div>
+                    `;
+                   
+                    document.body.appendChild(detailPopup);
+                   
+                    detailPopup.querySelector('.info-popup-close').addEventListener('click', function() {
+                        detailPopup.remove();
+                    });
+                   
+                    detailPopup.querySelector('.btn').addEventListener('click', function() {
+                        detailPopup.remove();
+                    });
+                });
+            });
+           
+            // Animate stats
+            const stat1 = document.getElementById('stat1');
+            const stat2 = document.getElementById('stat2');
+            const stat3 = document.getElementById('stat3');
+            const stat4 = document.getElementById('stat4');
+            const stat5 = document.getElementById('stat5');
+           
+            const targetValues = {
+                stat1: 98,
+                stat2: '24/7',
+                stat3: 500,
+                stat4: 99.9,
+                stat5: 30
+            };
+
+            animateValue(stat1, 0, targetValues.stat1, 2000, '%');
+           
+            setTimeout(() => {
+                stat2.textContent = targetValues.stat2;
+            }, 500);
+           
+            animateValue(stat3, 0, targetValues.stat3, 2000);
+           
+            animateValue(stat4, 0, targetValues.stat4, 2000, '%');
+       
+            animateValue(stat5, 0, targetValues.stat5, 2000, 's');
+           
+            // AI Recommendation buttons
+            document.querySelectorAll('.recommendation-btn.implement').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const recommendation = this.closest('.recommendation-content').querySelector('h4').textContent;
+                    alert(`Implementing recommendation: ${recommendation}`);
+                });
+            });
+           
+            document.querySelectorAll('.recommendation-btn.review').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const recommendation = this.closest('.recommendation-content').querySelector('h4').textContent;
+                    alert(`Reviewing details for: ${recommendation}`);
+                });
+            });
+           
+            // History range selector
+            document.getElementById('history-range').addEventListener('change', function() {
+                const range = this.value;
+                const historyContainer = document.getElementById('historyContainer');
+               
+                // In a real implementation, this would fetch data for the selected range
+                console.log(`Loading history for: ${range}`);
+               
+                // Simulate loading
+                historyContainer.innerHTML = '<p style="text-align: center;">Loading history data...</p>';
+               
+                setTimeout(() => {
+                    // Simulate loaded data
+                    historyContainer.innerHTML = `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span class="history-title">System Update</span>
+                                <span class="history-time">Today, 09:15</span>
+                            </div>
+                            <div class="history-details">
+                                Successfully applied security patches to all industrial controllers.
+                            </div>
+                            <span class="history-severity severity-low">Info</span>
+                        </div>
+                       
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span class="history-title">Network Scan</span>
+                                <span class="history-time">Today, 08:30</span>
+                            </div>
+                            <div class="history-details">
+                                Completed routine network vulnerability scan. 2 medium severity issues found.
+                            </div>
+                            <span class="history-severity severity-medium">Medium Severity</span>
+                        </div>
+                       
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span class="history-title">Device Offline</span>
+                                <span class="history-time">Yesterday, 22:45</span>
+                            </div>
+                            <div class="history-details">
+                                Temperature sensor #12 disconnected from network. Automatic recovery initiated.
+                            </div>
+                            <span class="history-severity severity-warning">Warning</span>
+                        </div>
+                    `;
+                }, 1000);
+            });
+           
+            // File upload functionality
+            const fileInput = document.getElementById('fileInput');
+            const uploadedFiles = document.getElementById('uploadedFiles');
+           
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    uploadedFiles.innerHTML = '';
+                   
+                    Array.from(this.files).forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'uploaded-file';
+                        fileItem.innerHTML = `
+                            <div class="file-info">
+                                <i class="fas fa-file-alt"></i>
+                                <span>${file.name}</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="remove-file" data-filename="${file.name}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                        uploadedFiles.appendChild(fileItem);
+                    });
+                   
+                    // Add event listeners to remove buttons
+                    document.querySelectorAll('.remove-file').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const fileName = this.getAttribute('data-filename');
+                            // In a real implementation, this would remove the file from storage
+                            this.closest('.uploaded-file').remove();
+                            alert(`File ${fileName} has been removed`);
+                        });
+                    });
+                   
+                    alert(`${this.files.length} file(s) uploaded successfully!`);
+                }
+            });
+        });
+
+        // Helper function to animate values
+        function animateValue(element, start, end, duration, suffix = '') {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value.toFixed(end % 1 ? 1 : 0) + suffix;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>

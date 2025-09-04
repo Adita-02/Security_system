@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IoTGuardAI - Our Services</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    /* ============================================= */
+    /*                  ROOT VARIABLES               */
+    /* ============================================= */
+    :root {
+      /* Colors */
+      --bg-darker: #1a1c1c;
+      --card-bg: #2c2c2c;
+      --text-muted: #bbb;
+      --primary-color: #00a7e0;
+      --bg-dark: #1f2121;
+      --white-color: #fff;
+      --bg-color: radial-gradient(circle at 85% center, #3d3c3c, #0f0f0f, #000);
+          
+      /* Effects */
+      --glow-effect: drop-shadow(0 0 30px rgba(0, 186, 255, 0.15));
+      --shadow-effect: drop-shadow(0 0 15px #0f0f0f) drop-shadow(0 0 30px #0f0f0f);
+      --transition: all 0.3s ease;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+          
+      /* Typography */
+      --font-heading: 'Arimo', sans-serif; 
+    }
+
+    /* ============================================= */
+    /*                  BASE STYLES                  */
+    /* ============================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      color: var(--white-color);
+      background-color: var(--bg-dark);
+      scroll-behavior: smooth;
+      line-height: 1.3;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--white-color);
+      transition: var(--transition);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button {
+      background: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 12px 30px;
+      font-size: 14px;
+      letter-spacing: 1px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: var(--primary-color);
+      color: var(--white-color);
+    }
+
+    /* ============================================= */
+    /*                  TYPOGRAPHY                  */
+    /* ============================================= */
+    .title {
+      font-size: 4.2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      opacity: .2;
+      position: relative;
+      margin-bottom: 10px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .des-title {
+      margin-top: -50px;
+      font-size: 1.2rem;
+      color: var(--white-color);
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-heading);
+    }
+
+    .view {
+      color: var(--primary-color);
+      font-size: 1rem;
+      text-decoration: none;
+      margin: 20px 0 100px;
+      display: inline-block;
+    }
+
+    /* ============================================= */
+    /*                  LAYOUT                       */
+    /* ============================================= */
+    .services-page {
+      padding: 60px 100px;
+      text-align: center;
+      align-items: center;
+    }
+
+    /* ============================================= */
+    /*                  NAVIGATION                   */
+    /* ============================================= */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 100px;
+      background-color: var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      font-family: var(--font-heading);
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: var(--white-color);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-links li a {
+      position: relative;
+      padding-bottom: 5px;
+      font-size: 14px;
+      transition: var(--transition)
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .nav-links li a:hover::after {
+      width: 100%;
+    }
+
+    .search-icon {
+      font-size: 18px;
+      color: var(--white-color);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-left: 10px;
+    }
+
+    .search-icon:hover {
+      color: var(--primary-color);
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification {
+      position: relative;
+      font-size: 20px; 
+      cursor: pointer;
+    }
+
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: var(--primary-color);
+      color: var(--white-color);
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid var(--primary-color);
+    }
+
+    .username {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* ============================================= */
+    /*                  SERVICES GRID                */
+    /* ============================================= */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+      justify-content: center;
+    }
+         
+    .service-box {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      color: var(--text-muted);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-box:hover {
+      transform: translateY(-5px);
+      background: #000;
+    }
+
+    .service-box img {
+      width: 80px;
+      margin-bottom: 20px;
+    }
+
+    .service-box h4 {
+      color: var(--white-color);
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .service-box p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ============================================= */
+    /*                  BACK BUTTON                  */
+    /* ============================================= */
+    .back-btn {
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .back-btn a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-color);
+      font-size: 16px;
+      transition: var(--transition);
+    }
+
+    .back-btn a:hover {
+      color: var(--white-color);
+    }
+  </style>
+</head>
+<body>
+  <!-- <header data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500">
+    <div class="logo">IoT<span>GuardAI</span></div>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <a href="https://www.google.com" class="search-icon">
+        <i class="ri-search-line"></i>
+      </a>
+    </nav>
+    <div class="header-icons">
+      <div class="notification">
+        <i class="ri-notification-3-line"></i>
+        <span class="badge">5</span>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">
+          <img src="avatar.jpg" alt="Avatar">
+        </div>
+        <span class="username"><a href="dld.html">IoTGuardAI</a></span>
+      </div>
+    </div>
+  </header> -->
+
+  <section class="services-page" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500">
+    <h2 class="title">SERVICES</h2>
+    <p class="des-title">Comprehensive AI-Powered Security Solutions</p>
+    
+    <div class="services-grid">
+      <!-- Original Services -->
+      <div class="service-box">
+        <img src="service1.png" alt="Lifetime Guarantee">
+        <h4>Lifetime Guarantee</h4>
+        <p>"Enjoy peace of mind with our AI-powered Lifetime Guarantee, ensuring your protection evolves as technology advances."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service2.png" alt="User Behavior Analytics">
+        <h4>User Behavior Analytics</h4>
+        <p>"Analyze user activities with AI to detect insider threats, account takeovers, or anomalies."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service3.png" alt="Free Software Updates">
+        <h4>Free Software Updates</h4>
+        <p>"Stay ahead effortlessly with AI-driven Free Software Updates that automatically optimize your experience as new features and protections roll out."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service4.png" alt="24/7 Support">
+        <h4>24/7 Support</h4>
+        <p>"Experience uninterrupted assistance with our AI-powered 24/7 Support, delivering instant solutions any time you need help."</p>
+      </div>
+      
+      <!-- Additional Services -->
+      <div class="service-box">
+        <img src="service5.png" alt="Network Security">
+        <h4>Network Security</h4>
+        <p>"Advanced AI algorithms monitor your network 24/7 to detect and prevent intrusions before they can cause harm."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service6.png" alt="Data Encryption">
+        <h4>Data Encryption</h4>
+        <p>"Military-grade encryption powered by AI that adapts to new threats, keeping your sensitive data secure at all times."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service7.png" alt="Threat Intelligence">
+        <h4>Threat Intelligence</h4>
+        <p>"Our AI aggregates global threat data to provide predictive security measures tailored to your specific risk profile."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service8.png" alt="Compliance Monitoring">
+        <h4>Compliance Monitoring</h4>
+        <p>"Automated compliance tracking ensures you meet all regulatory requirements with minimal effort on your part."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service9.png" alt="Vulnerability Scanning">
+        <h4>Vulnerability Scanning</h4>
+        <p>"Continuous AI-powered scanning identifies weaknesses in your systems before attackers can exploit them."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service10.png" alt="Incident Response">
+        <h4>Incident Response</h4>
+        <p>"Our AI-driven response system automatically contains and mitigates security incidents faster than human teams."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service11.png" alt="Cloud Security">
+        <h4>Cloud Security</h4>
+        <p>"Specialized protection for cloud environments with AI that understands cloud-specific threats and misconfigurations."</p>
+      </div>
+      
+      <div class="service-box">
+        <img src="service12.png" alt="Endpoint Protection">
+        <h4>Endpoint Protection</h4>
+        <p>"AI that learns the normal behavior of each device to detect and block malicious activity with pinpoint accuracy."</p>
+      </div>
+    </div>
+    
+    <div class="back-btn">
+      <a href="main.html"><i class="ri-arrow-left-line"></i> Back to Home</a>
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      offset: 0
+    });
+  </script>
+</body>
+</html>

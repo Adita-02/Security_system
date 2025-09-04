@@ -1,0 +1,1115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                
+  <title>IoTGuardAI - Smart Threat Detection</title>
+               
+  <link rel="stylesheet" href="style.css" />
+             
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+ 
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+    
+
+/* ============================================= */
+/*                  ROOT VARIABLES               */
+/* ============================================= */
+:root {
+  /* Colors */
+  --bg-darker: #1a1c1c;
+  --card-bg: #2c2c2c;
+  --text-muted: #bbb;
+  --primary-color: #00a7e0;
+  --bg-dark: #1f2121;
+  --white-color: #fff;
+  --bg-color: radial-gradient(circle at 85% center, #3d3c3c, #0f0f0f, #000);
+      
+  /* Effects */
+  --glow-effect: drop-shadow(0 0 30px rgba(0, 186, 255, 0.15));
+  --shadow-effect: drop-shadow(0 0 15px #0f0f0f) drop-shadow(0 0 30px #0f0f0f);
+  --transition: all 0.3s ease;
+  --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      
+  /* Typography */
+  
+  --font-heading: 'Times New Roman', Times, serif;
+}
+
+/* ============================================= */
+/*                  BASE STYLES                  */
+/* ============================================= */
+   
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  color: var(--white-color);
+  background-color: var(--bg-dark);
+  scroll-behavior: smooth;
+  line-height: 1.3;
+}
+
+a {
+  text-decoration: none;
+  color: var(--white-color);
+  transition: var(--transition);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 12px 30px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+button:hover {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+}
+
+/* ============================================= */
+/*                  TYPOGRAPHY                  */
+/* ============================================= */
+.title {
+  font-size: 4.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  opacity: .2;
+  position: relative;
+  margin-bottom: 10px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.des-title {
+  margin-top: -50px;
+  font-size: 1.2rem;
+  color: var(--white-color);
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-heading);
+}
+
+.view {
+  color: var(--primary-color);
+  font-size: 1rem;
+  text-decoration: none;
+  margin: 20px 0 100px;
+  display: inline-block;
+}
+
+/* ============================================= */
+/*                  LAYOUT                       */
+/* ============================================= */
+.products, 
+.services, 
+.popular, 
+.features, 
+.contact, 
+.footer {
+  padding: 60px 100px;
+  text-align: center;
+  align-items: center;
+}
+ 
+
+/* ============================================= */
+/*                  NAVIGATION                   */
+/* ============================================= */
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 100px;
+    background-color: var(--bg-dark);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: var(--font-heading);
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: var(--white-color);
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links{
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links li a{
+    position: relative;
+    padding-bottom: 5px;
+    font-size: 14px;
+    transition: var(--transition)
+}
+
+.nav-links li a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.nav-links li a:hover::after{
+    width: 100%;
+}
+
+.search-icon{
+    font-size: 18px;
+    color: var(--white-color);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-left: 10px;
+}
+
+.search-icon:hover{
+    color: var(--primary-color);
+}
+
+.header-icons{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.notification{
+    position: relative;
+    font-size: 20px; 
+    cursor: pointer;
+}
+
+.badge{
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.user-profile{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+}
+
+.username{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ============================================= */
+/*                     HERO                      */
+/* ============================================= */
+
+.hero{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60px 100px;
+    position: relative;
+    height: 90vh;
+    background: var(--bg-color);
+}
+ 
+.hero-content{
+    max-width: 500px;
+}
+
+.hero-content h1{
+    font-size: 3.3rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+}
+
+.h-line{
+    display: inline-block;
+    width: 40px;
+    height: 3px;
+    background-color: var(--primary-color);
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+.hero-content h2{
+    font-size: 2.9rem;
+    font-weight: 600;
+    margin-top: 10px;
+    font-family: var(--font-heading);
+}
+
+.price{
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+.price del{
+    color: var(--text-muted);
+    margin-right: 10px;
+}
+
+.price ins{
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.product-images{
+    display: flex;
+    right: 70px;
+    gap: 5px;
+    position: relative;
+}
+
+.product-images img{
+    max-height: 360px;
+    filter: var(--shadow-effect);
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.callout-circle{
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    position: absolute;
+    border: 5px solid var(--white-color);
+    box-shadow: var(--glow-effect);
+}
+
+.circle1{
+    top: 135px;
+    left: 120px;
+}
+
+.circle2{
+    top: 100px;
+    left: 370px;
+}
+
+.callout-line{
+    position: absolute;
+    background-color: var(--white-color);
+}
+
+.line1{
+    top: 50px;
+    left: 40px;
+    height: 2px;
+    width: 180px;
+    transform: rotate(90deg);
+}
+ 
+.line2{
+    top: 50px;
+    left: 230px;
+    height: 2px;
+    width: 160px;
+    transform: rotate(40deg);
+}
+ 
+.label{
+    position: absolute;
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.label1{
+    top: -80px;
+    left: 80px;
+}
+
+.label2{
+    top: -40px;
+    left: 220px;
+}
+
+.background-text{
+    position: absolute;
+    top: 10%;
+    left: -5%;
+    font-size: 18rem;
+    font-weight: bold;
+    opacity: .03;
+    color: var(--white-color);
+    pointer-events: none;
+    font-family: var(--font-heading);
+    z-index: 0;
+}
+
+.social-nav{
+    position: absolute;
+    top: 50%;
+    right: 100px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    font-size: 20px;
+    z-index: 100;
+}
+
+.social-nav i{
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-muted); 
+}
+
+.social-nav i:hover{
+    color: var(--primary-color);
+}
+
+.social-nav::before{
+    content: '';
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 200%;
+    width: 2px;
+    background-color: var(--text-muted);
+}
+
+/* ============================================= */
+/*                     PRODUCTS                  */
+/* ============================================= */
+
+.product-cards{
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+  
+.product-card{
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.product-card:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.product-card img{
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.product-card h3{
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* ============================================= */
+/*                  SERVICES                     */
+/* ============================================= */
+
+.services-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+    justify-content: center;
+}
+     
+.service-box{
+    background: var(--card-bg);
+    padding: 30px 50px;
+    border-radius: 10px;
+    text-align: center;
+    color: var(--text-muted);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.service-box:hover{
+    transform: translateY(-5px);
+    background: #000;
+}
+
+.service-box img{
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.service-box h4{
+    color: var(--white-color);
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.service-box p{
+    font-size: 13px;
+    line-height: 1.5;
+}
+/* ============================================= */
+/*           POPULAR ITEMS CAROUSEL              */
+/* ============================================= */
+
+.carousel-container{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease;
+    gap: 30px;
+}
+
+.carousel-item{
+    width: 170px;
+    opacity: 0.5;
+    transform: scale(0.9);
+    transition: all 0.5s ease;
+    filter: grayscale(100%);
+}
+
+.carousel-item.active{
+    width: 230px;
+    opacity: 1;
+    transform: scale(1.2);
+    filter: none;
+    z-index: 10;
+}
+
+.slider-dots{
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cr-dot{
+    width: 10px;
+    height: 10px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cr-dot.active{
+    background: var(--primary-color);
+}
+     
+/* ============================================= */
+/*                  PRODUCT TIMELINE             */
+/* ============================================= */
+
+.feature-container{
+    text-align: center;
+    align-items: center;
+}
+
+.timeline{
+    position: relative;
+    margin: 0 auto;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.timeline::before{
+    content: "";
+    position: absolute;
+    left: 25%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--primary-color);
+    transform: translateX(-50%);
+}
+
+.timeline-item{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+}
+
+.timeline-item::before{
+    content: "";
+    position: absolute;
+    left: 25%;
+    width: 18px;
+    height: 18px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.timeline-item img{
+    width: 220px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.timeline-text{
+    flex: 1;
+    padding-left: 30px;
+}
+
+.timeline-text h3{
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--white-color);
+}
+
+.timeline-text p{
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+    
+
+/* ============================================= */
+/*                CONTACT SECTION               */
+/* ============================================= */
+
+.contact-container{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.contact-info{
+    max-width: 40%;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.brand img{
+    width: 250px;
+    margin: 30px 0 10px;
+}
+
+.contact-info ul{
+    margin-top: 10px;
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.contact-info ul li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+    
+.contact-info .social-icons{
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.contact-info .social-icons i{
+    font-size: 24px;
+    color: var(--white-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.contact-info .social-icons i:hover{
+    transform: translateY(-3px);
+    color: var(--primary-color);
+}
+
+.contact-form {
+    flex: 2;
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.contact-form h4{
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: var(--white-color);
+}
+
+.form-row{
+    display: flex;
+    gap: 20px;
+}
+
+.form-row input, 
+.contact-form input,
+.contact-form textarea{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    background: var(--card-bg);
+    color: var(--white-color);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus{
+    outline: 1px solid var(--primary-color);
+    box-shadow: 0 0 10px rgba(0 , 191, 255, 0.2);
+}
+
+.contact-form textarea{
+    height: 150px;
+    resize: none;
+}
+/* ============================================= */
+/*                     FOOTER                    */
+/* ============================================= */
+ 
+.footer{
+    padding: 60px 100px;
+    color: var(--text-muted);
+    background-color: var(--bg-darker);
+}
+
+.footer-container{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-column h4{
+    color: var(--white-color);
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.footer-column ul li{
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--text-muted);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.footer-column ul li:hover{
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.copyright{
+    text-align: center;
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--text-muted);
+    padding-top: 20px;
+}
+</style>
+<body>
+   
+    <header>
+        <div class="logo">IoT<span>Guard</span><span>AI</span></div>
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="main.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                
+                <li><a href="contactus.html">Contact</a></li>
+            </ul>
+
+            <a href="https://www.google.com" class="search-icon">
+                <i class="ri-search-line"></i>
+            </a>
+        </nav>
+
+        <div class="header-icons">
+            <div class="notification">
+                <i class="ri-notification-3-line"></i>
+                <span class="badge">5</span>
+            </div>
+
+            <div class="user-profile">
+                <div class="avatar">
+                    <img src="avatar.jpg" alt="Avatar">
+                </div>
+                <span class="username"><a href="dashboard.html">IoTGuardAI</a></span>
+            </div>
+        </div>
+    </header>
+
+   
+    <section class="hero">
+        <div class="hero-content" data-aos="fade-right"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+            <h1>Intelligent security solutions leveraging AI to safeguard<span class="h-line"></span></h1>
+            <!-- <h2>Intelligent security solutions leveraging AI to safeguard 
+                and optimize interconnected environmental and industrial IoT systems.</h2> -->
+            <!-- <div class="price">
+                <del>$67.99</del><ins>$50.99</ins>
+            </div> -->
+        </div>
+
+        <div class="product-images" data-aos="fade-left"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+            <img src="heroimg1.png" alt="">
+            <!-- <img src="pexels-tara-winstead-8386440.jpg" alt=""> -->
+
+
+            <!-- <div class="callout-circle circle1"></div>
+            <div class="callout-circle circle2"></div>
+            <div class="callout-line line1"></div>
+            <div class="callout-line line2"></div>
+            <div class="label label1">Personalized <br>  Button</div>
+            <div class="label label2">Clickable <br>  Button</div> -->
+        </div>
+
+        <!-- <div class="background-text">G502</div> -->
+
+    </section>
+
+    <div class="social-nav" data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+        <i class="ri-facebook-line"></i>
+        <i class="ri-phone-line"></i>
+        <i class="ri-instagram-line"></i>
+        <i class="ri-twitter-line"></i>
+    </div>
+
+    <!-- Social Sidebar -->
+  
+    <!-- ============================================= -->
+    <!--                     PRODUCTS                  -->
+    <!-- ============================================= -->
+    <section class="products" data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+        <h2 class="title">SECURITY</h2>
+        <p class="des-title">Which type of Shield are you looking for?</p>
+        <!-- <a href="#" class="view">View more →</a> -->
+        <div class="product-cards">
+            <div class="product-card">
+                <img src="img1 (1).jpg" alt="">
+                <h3>Real-Time Alerts</h3>
+            </div>
+            <div class="product-card">
+                <img src="img1 (4).jpg" alt="">
+                <h3>Auto-Isolation</h3>
+            </div>
+            <div class="product-card">
+                <img src="img1 (5).jpg" alt="">
+                <h3>Backup Activiation & Others</h3>
+            </div>  
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!--                     SERVICES                  -->
+    <!-- ============================================= -->
+    <section class="services" data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+        <h2 class="title">SERVICES</h2>
+        <p class="des-title">We provide more than high-tech Defense!</p>
+        <a href="services_view.html" class="view">View more →</a>
+        <div class="services-grid">
+            <div class="service-box">
+                <img src="service1.png" alt="">
+                <h4>Lifetime Guarantee</h4>
+                <p>"Enjoy peace of mind with our AI-powered Lifetime Guarantee,
+                     ensuring your protection evolves as technology advances."</p>
+            </div>
+            <div class="service-box">
+                <img src="service2.png" alt="">
+                <h4>User Behavior Analytics</h4>
+                <p>"Analyze user activities with AI to detect insider threats, account takeovers, or anomalies."</p>
+            </div>
+            <div class="service-box">
+                <img src="service3.png" alt="">
+                <h4>Free Software Updates</h4>
+                <p>"Stay ahead effortlessly with AI-driven Free Software Updates that automatically 
+                    optimize your experience as new features and protections roll out."</p>
+            </div>
+            <div class="service-box">
+                <img src="service4.png" alt="">
+                <h4>24/7 Support</h4>
+                <p>"Experience uninterrupted assistance with our AI-powered 24/7 Support, 
+                    delivering instant solutions any time you need help."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!--            POPULAR ITEMS CAROUSEL             -->
+    <!-- ============================================= -->
+    <section class="popular" data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+        <h2 class="title">POPULAR</h2>
+        <p class="des-title">We provide more than high-tech products!</p>
+        <!-- <a href="#" class="view">View more →</a> -->
+            <div class="carousel-container">
+                <div class="carousel">
+                    <img src="img1 (2).jpg" alt="" class="carousel-item">
+                    <img src="img1 (3).jpg" alt="" class="carousel-item">
+                    <img src="img2.jpg" alt="" class="carousel-item active">
+                    <img src="img3.jpg" alt="" class="carousel-item">
+                    <img src="img4.jpg" alt="" class="carousel-item">
+                </div>
+            </div>
+            
+            <div class="slider-dots">
+                <span class="cr-dot" onclick="goTo(0)"></span>
+                <span class="cr-dot" onclick="goTo(1)"></span>
+                <span class="cr-dot active" onclick="goTo(2)"></span>
+                <span class="cr-dot" onclick="goTo(3)"></span>
+                <span class="cr-dot" onclick="goTo(4)"></span>
+            </div>
+
+    </section>
+
+    <!-- ============================================= -->
+    <!--                     FEATURES                  -->
+    <!-- ============================================= -->
+    <section class="features" data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+        <div class="feature-container">
+            <h2 class="title">FEATURES</h2>
+            <p class="des-title">Which type of safety are you looking for?</p>
+            <a href="dashboard.html#features" class="view">View more →</a>      
+            <div class="timeline">
+                <div class="timeline-item">
+                    <img src="/image/1.png" alt="">
+                    <div class="timeline-text">
+                        <h3>AI Threat Detection & Prevention</h3>
+                        <p>Use machine learning models to identify, predict, and block cyber threats in real-time.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <img src="/image/2.png" alt="">
+                    <div class="timeline-text">
+                        <h3>Incident Response Automation</h3>
+                        <p>Use AI to automate responses to detected threats, minimizing response times and reducing manual workload.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <img src="/image/3.png" alt="">
+                    <div class="timeline-text">
+                        <h3>Data Protection & Privacy Compliance</h3>
+                        <p>Ensure sensitive data is protected 
+                            and help clients comply with privacy laws (like GDPR) using AI-driven tools.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <img src="/image/4.png" alt="">
+                    <div class="timeline-text">
+                        <h3>Security Insights & Reporting</h3>
+                        <p>Get detailed, AI-driven reports and dashboards for full visibility.</p><br><br><br><br>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="buy-now">
+                <button>DETAILS</button>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!--                     CONTACT                   -->
+    <!-- ============================================= -->
+   <section class="contact" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500">
+    <h2 class="title">CONTACTS</h2>
+    <p class="des-title">Some ways for you to contact us</p>
+    <a href="contactus.html" class="view">View more →</a>
+    <div class="contact-container">
+        <div class="contact-info">
+            <div class="brand">
+                 <div class="logo">IoT<span>Guard</span>AI</span></div>
+            </div>
+            <ul>
+                <li><i class="ri-phone-line"></i>+009 123 456789</li>
+                <li><i class="ri-mail-line"></i>contact@iotguardai.com</li>
+            </ul>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/adita_mutsuddi/"><i class="ri-instagram-line"></i></a>
+                <a href="https://www.facebook.com/adita.mutsuddi"><i class="ri-facebook-line"></i></a>
+                <a href="https://x.com/AhmedWarisa"><i class="ri-twitter-x-line"></i></a>
+                <a href="https://www.pinterest.com/"><i class="ri-pinterest-line"></i></a>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h4>Feel free to send us your message</h4>
+            <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+                <div class="form-row">
+                    <input type="text" name="name" placeholder="Your name" required>
+                    <input type="email" name="email" placeholder="Your email" required>
+                </div>
+                <input type="text" name="subject" placeholder="Subject" required>
+                <textarea name="message" placeholder="Your message" required></textarea>
+                <button type="submit">Submit</button>
+                <div id="form-status" class="form-status"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+   
+    <footer class="footer" data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="1500">
+        <div class="footer-container">
+      <div class="footer-column">
+        <h4>RESOURCES for IoTGuardAI</h4>
+        <ul>
+          <li>Getting Started</li>
+          <li>Training and Certification</li>
+          <li>Office</li>
+         
+          <li>Analyst Reports</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Developers on IoTGuardAI</h4>
+        <ul>
+          <li>Developer Center</li>
+          <li>SDKs & Tools</li>
+          <li>Python on IoTGuardAI</li>
+          <li>JavaScripts on IoTGuardAI</li>
+          <li>PHP on IoTGuardAI</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>FANCY MEMBERS</h4>
+        <ul>
+          <li>Afia Tasnim Anisa</li>
+          <li>Warisa Ahmed</li>
+          <li>Tasmia Binte Arefin</li>
+          <li>Fatema-tuz-zohora</li>
+          <li>Adita Mutsuddi</li>
+         
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>HELP CENTER</h4>
+        <ul>
+          <li>FAQs</li>
+          <li>Terms of Use</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright">
+        COPYRIGHT © 2025 IoTGuardAI INC. ALL RIGHTS RESERVED
+    </div>
+    </footer>
+  
+    <script>
+        // Carousel functionality
+const items = document.querySelectorAll('.carousel-item');
+const dots = document.querySelectorAll('.cr-dot');
+let activeIndex = 2;
+
+function updateCarousel() {
+  items.forEach((item, index) => {
+    item.classList.remove('active');
+    dots[index].classList.remove('active');
+  });
+  items[activeIndex].classList.add('active');
+  dots[activeIndex].classList.add('active');
+
+  const offset = (activeIndex - 2) * -140;
+  document.querySelector('.carousel').style.transform = `translateX(${offset}px)`;
+}
+
+function goTo(index) {
+  activeIndex = index;
+  updateCarousel();
+}
+
+updateCarousel(); // init
+    </script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+           offset: 0
+        });
+    </script>
+</body>
+</html>

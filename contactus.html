@@ -1,0 +1,1478 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us - IoTGuardAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+    
+    :root {
+     
+      --bg-darker: #1a1c1c;
+      --card-bg: #2c2c2c;
+      --text-muted: #bbb;
+      --primary-color: #00a7e0;
+      --primary-dark: #0077a3;
+      --bg-dark: #1f2121;
+      --white-color: #fff;
+      --bg-color: radial-gradient(circle at 85% center, #3d3c3c, #0f0f0f, #000);
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --environment-color: #27ae60;
+      --glow-effect: drop-shadow(0 0 30px rgba(0, 186, 255, 0.15));
+      --shadow-effect: drop-shadow(0 0 15px #0f0f0f) drop-shadow(0 0 30px #0f0f0f);
+      --transition: all 0.3s ease;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      --font-heading: 'Times New Roman', Times, serif; 
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      color: var(--white-color);
+      background-color: var(--bg-dark);
+      scroll-behavior: smooth;
+      line-height: 1.3;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--white-color);
+      transition: var(--transition);
+    }
+
+   
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 100px;
+      background-color: var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      font-family: var(--font-heading);
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: var(--white-color);
+    }
+
+ 
+    .contact-header {
+      text-align: center;
+      padding: 80px 100px 40px;
+      position: relative;
+      background: var(--bg-color);
+      overflow: hidden;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .contact-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 50%, rgba(0, 167, 224, 0.1), transparent 70%);
+      z-index: -1;
+    }
+
+    .contact-header h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-shadow: 0 0 20px rgba(0, 167, 224, 0.5);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px rgba(0, 167, 224, 0.5);
+      }
+      to {
+        text-shadow: 0 0 20px rgba(0, 167, 224, 0.8), 0 0 30px rgba(0, 167, 224, 0.6);
+      }
+    }
+
+    .contact-header p {
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 40px;
+      position: relative;
+    }
+
+   
+    .go-back-container {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      z-index: 10;
+    }
+
+    .go-back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white-color);
+      font-size: 16px;
+      transition: var(--transition);
+      background: rgba(0, 167, 224, 0.2);
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: 1px solid rgba(0, 167, 224, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .go-back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 167, 224, 0.4), transparent);
+      transition: 0.5s;
+    }
+
+    .go-back-button:hover::before {
+      left: 100%;
+    }
+
+    .go-back-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 167, 224, 0.3);
+      color: var(--white-color);
+    }
+
+    .go-back-button i {
+      transition: var(--transition);
+    }
+
+    .go-back-button:hover i {
+      transform: translateX(-5px);
+    }
+
+    
+    .contact-section {
+      padding: 60px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: var(--primary-color);
+      font-family: var(--font-heading);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .about-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      max-width: 800px;
+    }
+
+  
+    .office-info {
+      margin-bottom: 60px;
+    }
+
+    .office-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .office-detail {
+      flex: 1;
+      min-width: 250px;
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 167, 224, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .office-detail::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .office-detail:hover::before {
+      width: 100%;
+      opacity: 0.1;
+    }
+
+    .office-detail:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border-color: rgba(0, 167, 224, 0.3);
+    }
+
+    .office-detail h3 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .office-detail p {
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .map-container {
+      margin-top: 30px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 167, 224, 0.2);
+      position: relative;
+    }
+
+    .map-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 167, 224, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .map-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 167, 224, 0.2);
+    }
+
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+    }
+
+  
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto 1fr 1fr;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .team-card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 167, 224, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .leader-card {
+      grid-column: 1 / span 3;
+      grid-row: 1;
+    }
+
+    .team-card.environment {
+      grid-column: 2;
+      grid-row: 2 / span 2;
+      height: calc(200% + 30px); 
+    }
+
+    .team-card.industry1 {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .team-card.industry2 {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    .team-card.security1 {
+      grid-column: 1;
+      grid-row: 3;
+    }
+
+    .team-card.security2 {
+      grid-column: 3;
+      grid-row: 3;
+    }
+
+    .team-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--primary-color);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.5s ease;
+    }
+
+    .team-card:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .team-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-color);
+      margin: 0 auto 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .team-card:hover .profile-img {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 167, 224, 0.5);
+    }
+
+    
+    .profile-img::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transition: var(--transition);
+    }
+
+    .team-card:hover .profile-img::after {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 20px rgba(0, 167, 224, 0.7);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 10px rgba(0, 167, 224, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(0, 167, 224, 0.9);
+      }
+      100% {
+        box-shadow: 0 0 10px rgba(0, 167, 224, 0.7);
+      }
+    }
+
+    
+    .leader-card .profile-img {
+  width: 200px;
+  height: 200px;
+  border-width: 4px;
+  border-color: var(--primary-color);
+  transition: all 0.5s ease;
+  filter: none; 
+}
+
+   .leader-card:hover .profile-img {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 167, 224, 0.7);
+  border-color: rgba(0, 167, 224, 0.8);
+}
+
+@keyframes enhanced-glow {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 167, 224, 0.5);
+    border-color: rgba(0, 167, 224, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 167, 224, 0.9);
+    border-color: rgba(0, 167, 224, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(0, 167, 224, 0.5);
+    border-color: rgba(0, 167, 224, 0.5);
+  }
+}
+   .leader-card:hover .profile-img {
+  animation: enhanced-glow 2s infinite;
+}
+
+    .team-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .team-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--white-color);
+      position: relative;
+    }
+
+    .team-card .role {
+      display: inline-block;
+      background: rgba(0, 167, 224, 0.2);
+      color: var(--primary-color);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      border: 1px solid rgba(0, 167, 224, 0.3);
+    }
+
+    
+    .role.leader {
+      background: rgba(46, 204, 113, 0.2);
+      color: var(--success-color);
+      border-color: rgba(46, 204, 113, 0.3);
+    }
+
+    .role.industry {
+      background: rgba(243, 156, 18, 0.2);
+      color: var(--warning-color);
+      border-color: rgba(243, 156, 18, 0.3);
+    }
+
+    .role.environment {
+      background: rgba(39, 174, 96, 0.2);
+      color: var(--environment-color);
+      border-color: rgba(39, 174, 96, 0.3);
+    }
+
+    .role.security {
+      background: rgba(231, 76, 60, 0.2);
+      color: var(--danger-color);
+      border-color: rgba(231, 76, 60, 0.3);
+    }
+
+.role.leader.animate__animated {
+  background: linear-gradient(90deg, rgba(0,167,224,0.2), rgba(46,204,113,0.3), rgba(0,167,224,0.2));
+  background-size: 200% auto;
+  animation: gradient-shine 3s linear infinite;
+}
+
+@keyframes gradient-shine {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+
+.team-card.industry-combined, 
+.team-card.second-row {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+
+.team-card-inner {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid rgba(0, 167, 224, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card-inner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 167, 224, 0.3);
+}
+    .team-card p {
+      color: var(--text-muted);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      transition: var(--transition);
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .social-links a:hover::before {
+      left: 100%;
+    }
+
+    .social-links a:hover {
+      color: var(--primary-color);
+      transform: translateY(-3px) scale(1.1);
+      background: rgba(0, 167, 224, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 167, 224, 0.3);
+    }
+
+ 
+    .leader-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(0, 167, 224, 0.05) 0%, var(--card-bg) 100%);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 167, 224, 0.2);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .leader-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 167, 224, 0.1) 0%, transparent 70%);
+      animation: rotate 15s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .leader-card h3 {
+      font-size: 2rem;
+      margin: 20px 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .leader-card .role {
+      background: rgba(46, 204, 113, 0.3);
+      font-size: 1rem;
+      padding: 8px 25px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .leader-card p {
+      max-width: 700px;
+      margin: 0 auto 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(0, 167, 224, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    
+    .footer {
+      background-color: var(--bg-darker);
+      padding: 60px 100px 30px;
+      margin-top: 60px;
+      position: relative;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-column {
+      margin-bottom: 30px;
+    }
+
+    .footer-column h4 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-column h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: var(--primary-color);
+    }
+
+    .footer-column ul {
+      list-style: none;
+    }
+
+    .footer-column li {
+      margin-bottom: 10px;
+      color: var(--text-muted);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .footer-column li:hover {
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    .copyright {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 40px;
+      position: relative;
+      padding-top: 20px;
+    }
+
+    .copyright::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    }
+
+    
+    .contact-cta {
+      text-align: center;
+      margin: 60px 0;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: var(--transition);
+      box-shadow: 0 5px 15px rgba(0, 167, 224, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 167, 224, 0.6);
+    }
+
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .cta-button:hover::before {
+      left: 100%;
+    }
+
+  
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (max-width: 1200px) {
+      .team-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr 1fr 1fr;
+      }
+
+      .leader-card {
+        grid-column: 1 / span 2;
+        grid-row: 1;
+      }
+
+      .team-card.environment {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+        height: auto;
+      }
+
+      .team-card.industry1 {
+        grid-column: 1;
+        grid-row: 3;
+      }
+
+      .team-card.industry2 {
+        grid-column: 2;
+        grid-row: 3;
+      }
+
+      .team-card.security1 {
+        grid-column: 1;
+        grid-row: 4;
+      }
+
+      .team-card.security2 {
+        grid-column: 2;
+        grid-row: 4;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .leader-card {
+        padding: 30px;
+      }
+      
+      .leader-card .profile-img {
+        width: 180px;
+        height: 180px;
+      }
+      
+      .leader-card h3 {
+        font-size: 1.8rem;
+      }
+
+      .contact-header h1 {
+        font-size: 3rem;
+      }
+
+      .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      header, .contact-header, .contact-section, .footer {
+        padding: 20px;
+      }
+      
+      .go-back-container {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+      }
+      
+      .contact-header h1 {
+        font-size: 2.2rem;
+        margin-top: 40px;
+      }
+      
+      .contact-header p {
+        font-size: 1.1rem;
+      }
+      
+      .team-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .leader-card,
+      .team-card.environment,
+      .team-card.industry1,
+      .team-card.industry2,
+      .team-card.security1,
+      .team-card.security2 {
+        grid-column: 1;
+        grid-row: auto;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .leader-card {
+        padding: 25px 20px;
+      }
+      
+      .leader-card h3 {
+        font-size: 1.5rem;
+      }
+
+      .profile-img {
+        width: 120px;
+        height: 120px;
+      }
+
+      .footer-column h4 {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .section-title {
+        font-size: 1.6rem;
+      }
+    }
+
+  
+    .contact-form-section {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 10px;
+      margin: 60px auto;
+      max-width: 800px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 167, 224, 0.2);
+    }
+
+    .contact-form-section h2 {
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 167, 224, 0.3);
+      border-radius: 5px;
+      color: var(--white-color);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 10px rgba(0, 167, 224, 0.3);
+    }
+
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: block;
+      margin: 30px auto 0;
+      width: 200px;
+      text-align: center;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 167, 224, 0.4);
+    }
+
+   
+    .testimonials-section {
+      margin: 80px auto;
+      max-width: 1200px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .testimonial-card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 167, 224, 0.1);
+      position: relative;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 5rem;
+      color: rgba(0, 167, 224, 0.1);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .testimonial-content {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 20px;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .testimonial-author img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+
+    .author-info h4 {
+      color: var(--white-color);
+      margin-bottom: 5px;
+    }
+
+    .author-info p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <section class="contact-header" data-aos="fade-down" data-aos-duration="1000">
+    <div class="go-back-container">
+      <a href="main.html" class="go-back-button">
+        <i class="ri-arrow-left-line"></i> Back to Home
+      </a>
+    </div>
+    <h1 class="animate__animated animate__fadeIn">Contact Our Security Team</h1>
+    <p>Reach out to our cybersecurity experts for inquiries, support, or collaboration opportunities.</p>
+    <div class="contact-cta" data-aos="fade-up" data-aos-delay="300">
+      <a href="#team" class="cta-button">Meet Our Team</a>
+      <a href="#contact-form" class="cta-button" style="margin-left: 20px;">Contact Us</a>
+    </div>
+  </section>
+
+  <section class="contact-section" data-aos="fade-up">
+    <h2 class="section-title">About Our Security Solutions</h2>
+    <p class="about-text">
+      IoTGuardAI provides cutting-edge AI-powered security solutions to protect your digital assets. 
+      Our team of cybersecurity experts is dedicated to delivering innovative protection against evolving threats, 
+      ensuring your systems remain secure in an increasingly connected world. With specialized teams focusing on 
+      Industry 4.0 security, environmental monitoring, and network protection, we offer comprehensive solutions 
+      tailored to your needs.
+    </p>
+  </section>
+
+  <section class="contact-section" data-aos="fade-up">
+    <div class="office-info">
+      <h2 class="section-title">Our Security Operations Center</h2>
+      <div class="office-details">
+        <div class="office-detail" data-aos="fade-up" data-aos-delay="100">
+          <h3>Headquarters</h3>
+          <p><i class="ri-building-line"></i> IoTGuardAI Security Hub</p>
+          <p><i class="ri-map-pin-line"></i> 4318, Sonaichhari, Kumira, Bangladesh</p>
+          <p><i class="ri-time-line"></i> Mon - Fri (9 AM - 6 PM)</p>
+        </div>
+        <div class="office-detail" data-aos="fade-up" data-aos-delay="200">
+          <h3>Contact Channels</h3>
+          <p><i class="ri-phone-line"></i> +880 1305 991 418</p>
+          <p><i class="ri-mail-line"></i> security@iotguardai.com</p>
+          <p><i class="ri-customer-service-line"></i> 24/7 Emergency Support</p>
+        </div>
+      </div>
+      
+      <h3 style="color: var(--primary-color); margin-bottom: 20px;">Our Location</h3>
+      <div class="map-container" data-aos="fade-up">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3682.5656622629166!2d91.7297747759643!3d22.513865379600506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30ad2751cb32c23f%3A0x78b38e0d3a7912c!2sInternational%20Islamic%20University%20Chittagong!5e0!3m2!1sen!2sbd!4v1708800000000"
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section" id="team" data-aos="fade-up">
+    <h2 class="section-title">Our Leadership & Team</h2>
+    <p class="about-text">
+      Meet the brilliant minds behind IoTGuardAI. Our team combines academic excellence with practical 
+      cybersecurity expertise to deliver unparalleled protection for your digital assets.
+    </p>
+    
+    <div class="team-grid">
+      
+      <div class="leader-card" data-aos="zoom-in">
+        <img src="dld.png" alt="Engr. Md Imam Uddin Forkan" class="profile-img">
+        <h3>Engr. Md Imam Uddin Forkan</h3>
+        <span class="role leader animate__animated animate__pulse animate__infinite animate__slower">Project Supervisor & Cybersecurity Expert</span>
+        <p>With over 15 years of experience in cybersecurity and network protection, Engr. Forkan guides our team with his extensive knowledge and research expertise in IoT security frameworks.</p>
+        <div class="social-links">
+          <a href="#" target="_blank"><i class="ri-facebook-fill"></i></a>
+          <a href="#" target="_blank"><i class="ri-twitter-x-line"></i></a>
+          <a href="#" target="_blank"><i class="ri-linkedin-fill"></i></a>
+          <a href="#" target="_blank"><i class="ri-mail-line"></i></a>
+        </div>
+      </div>
+      
+    
+      <div class="team-card industry-combined" data-aos="fade-up" data-aos-delay="100" style="grid-column: 1 / span 3; display: flex; justify-content: space-around; flex-wrap: wrap;">
+       
+        <div class="team-card-inner" style="flex: 1; min-width: 300px; margin: 10px;">
+          <img src="warisa.jpg" alt="Warisa Ahmed" class="profile-img">
+          <h3>Warisa Ahmed</h3>
+          <span class="role industry">Industry 4.0 Security Lead</span>
+          <p><i class="ri-phone-line"></i> +880 1833 227 793</p>
+          <p><i class="ri-mail-line"></i> warisaahmed2017@gmail.com</p>
+          <p>Specializing in industrial IoT security and smart factory protection systems.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/warisaahmed/" target="_blank"><i class="ri-linkedin-fill"></i></a>
+            <a href="https://www.facebook.com/warisa.ahmed.10" target="_blank"><i class="ri-facebook-fill"></i></a>
+            <a href="https://x.com/AhmedWarisa" target="_blank"><i class="ri-twitter-x-line"></i></a>
+            <a href="https://www.instagram.com/warisa_ahmed_/" target="_blank"><i class="ri-instagram-line"></i></a>
+          </div>
+        </div>
+        
+        
+        <div class="team-card-inner" style="flex: 1; min-width: 300px; margin: 10px;">
+          <img src="afia.jpg" alt="Afia Anisa" class="profile-img">
+          <h3>Afia Anisa</h3>
+          <span class="role industry">Industry 4.0 Security Specialist</span>
+          <p><i class="ri-phone-line"></i> +880 1886 408 639</p>
+          <p><i class="ri-mail-line"></i> anisa@example.com</p>
+          <p>Focusing on AI-driven threat detection for manufacturing systems.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/afia-tasnim-anisa-776202324/" target="_blank"><i class="ri-linkedin-fill"></i></a>
+            <a href="https://www.facebook.com/afia.anisa.102111" target="_blank"><i class="ri-facebook-fill"></i></a>
+            <a href="https://x.com/admin3" target="_blank"><i class="ri-twitter-x-line"></i></a>
+            <a href="https://www.instagram.com/afiaanisaa__/" target="_blank"><i class="ri-instagram-line"></i></a>
+          </div>
+        </div>
+      </div>
+      
+
+      <div class="team-card second-row" data-aos="fade-up" data-aos-delay="200" style="grid-column: 1 / span 3; display: flex; justify-content: space-around; flex-wrap: wrap;">
+        
+        <div class="team-card-inner" style="flex: 1; min-width: 300px; margin: 10px;">
+          <img src="arpa.jpg" alt="Adita Mutsuddi" class="profile-img">
+          <h3>Adita Mutsuddi</h3>
+          <span class="role security">Cybersecurity Engineer</span>
+          <p><i class="ri-phone-line"></i> +880 1305 991 418</p>
+          <p><i class="ri-mail-line"></i> aditamutsuddi3@gmail.com</p>
+          <p>Specializing in network penetration testing and vulnerability assessment.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/adita.mutsuddi" target="_blank"><i class="ri-linkedin-fill"></i></a>
+            <a href="https://www.facebook.com/adita.mutsuddi" target="_blank"><i class="ri-facebook-fill"></i></a>
+            <a href="https://x.com/admin1" target="_blank"><i class="ri-twitter-x-line"></i></a>
+            <a href="https://www.instagram.com/adita_mutsuddi/" target="_blank"><i class="ri-instagram-line"></i></a>
+          </div>
+        </div>
+        
+      
+        <div class="team-card-inner" style="flex: 1; min-width: 300px; margin: 10px;">
+          <img src="zohora.jpg" alt="Fatema-tuz-zohora" class="profile-img">
+          <h3>Fatema-tuz-zohora</h3>
+          <span class="role environment">Environmental Security Specialist</span>
+          <p><i class="ri-phone-line"></i> +880 1568 240 025</p>
+          <p><i class="ri-mail-line"></i> ms9.jm10@gmail.com</p>
+          <p>Developing eco-friendly security solutions and monitoring environmental IoT networks.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/Fatema-tuz-zohora" target="_blank"><i class="ri-linkedin-fill"></i></a>
+            <a href="https://www.facebook.com/maizo13" target="_blank"><i class="ri-facebook-fill"></i></a>
+            <a href="#" target="_blank"><i class="ri-twitter-x-line"></i></a>
+            <a href="#" target="_blank"><i class="ri-instagram-line"></i></a>
+          </div>
+        </div>
+        
+       
+        <div class="team-card-inner" style="flex: 1; min-width: 300px; margin: 10px;">
+          <img src="tasmi.jpg" alt="Tasmia Binte Arefin" class="profile-img">
+          <h3>Tasmia Binte Arefin</h3>
+          <span class="role security">Security Systems Architect</span>
+          <p><i class="ri-phone-line"></i> +880 1319 028 013</p>
+          <p><i class="ri-mail-line"></i> arefintasmia75@gmail.com</p>
+          <p>Designing robust security frameworks for IoT ecosystems.</p>
+          <div class="social-links">
+            <a href="#" target="_blank"><i class="ri-linkedin-fill"></i></a>
+            <a href="#" target="_blank"><i class="ri-facebook-fill"></i></a>
+            <a href="#" target="_blank"><i class="ri-twitter-x-line"></i></a>
+            <a href="https://www.instagram.com/arefin_tasmia/" target="_blank"><i class="ri-instagram-line"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+  
+  <section class="contact-section testimonials-section" data-aos="fade-up">
+    <h2 class="section-title">What Our Clients Say</h2>
+    <p class="about-text">
+      Don't just take our word for it. Here's what our clients have to say about our security solutions.
+    </p>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="testimonial-content">
+          IoTGuardAI's security solutions transformed our industrial IoT network. Their team's expertise in Industry 4.0 security is unmatched.
+        </div>
+        <div class="testimonial-author">
+          <img src="partner1.jpg" alt="Client">
+          <div class="author-info">
+            <h4>Mohammad Rahman</h4>
+            <p>CTO, SmartFactory BD</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="testimonial-content">
+          The environmental monitoring system they implemented has significantly improved our sustainability reporting and compliance.
+        </div>
+        <div class="testimonial-author">
+          <img src="partner2.jpg" alt="Client">
+          <div class="author-info">
+            <h4>Md. Shafiq khan</h4>
+            <p>Environmental Director, GreenTech</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="testimonial-content">
+          Their 24/7 security monitoring gives us peace of mind knowing our critical infrastructure is protected around the clock.
+        </div>
+        <div class="testimonial-author">
+          <img src="partner3.jpg" alt="Client">
+          <div class="author-info">
+            <h4>Abdul Karim</h4>
+            <p>IT Director, City Utilities</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500">
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>RESOURCES for IoTGuardAI</h4>
+        <ul>
+          <li>Getting Started</li>
+          <li>Training and Certification</li>
+          <li>Office</li>
+          <li>Analyst Reports</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Developers on IoTGuardAI</h4>
+        <ul>
+          <li>Developer Center</li>
+          <li>SDKs & Tools</li>
+          <li>Python on IoTGuardAI</li>
+          <li>JavaScripts on IoTGuardAI</li>
+          <li>PHP on IoTGuardAI</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>FANCY MEMBERS</h4>
+        <ul>
+          <li>Afia Tasnim Anisa</li>
+          <li>Warisa Ahmed</li>
+          <li>Tasmia Binte Arefin</li>
+          <li>Fatema-tuz-zohora</li>
+          <li>Adita Mutsuddi</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>HELP CENTER</h4>
+        <ul>
+          <li>FAQs</li>
+          <li>Terms of Use</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright">
+      COPYRIGHT © 2025 IoTGuardAI INC. ALL RIGHTS RESERVED
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+  
+    AOS.init({
+      offset: 0,
+      duration: 1000,
+      once: false,
+      easing: 'ease-in-out-quad'
+    });
+    
+   
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+       
+        const size = Math.random() * 3 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+       
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.bottom = `-${size}px`;
+        
+    
+        const duration = Math.random() * 10 + 10;
+        particle.style.animationDuration = `${duration}s`;
+        
+      
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        
+        
+        particle.style.opacity = Math.random() * 0.5 + 0.1;
+        
+        container.appendChild(particle);
+      }
+    }
+   
+    window.addEventListener('load', createParticles);
+    
+    document.querySelectorAll('.team-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px)';
+        this.style.boxShadow = '0 15px 30px rgba(0, 167, 224, 0.3)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+      });
+    });
+    
+  
+    document.querySelectorAll('.social-links a').forEach(icon => {
+      icon.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px) scale(1.2)';
+      });
+      
+      icon.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+      });
+    });
+    
+    
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+  
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you for your message! Our team will get back to you soon.');
+      this.reset();
+    });
+
+    
+    const leaderCard = document.querySelector('.leader-card');
+    leaderCard.addEventListener('mouseenter', function() {
+      this.querySelector('.profile-img').style.transform = 'scale(1.1) rotate(5deg)';
+      this.querySelector('.profile-img').style.boxShadow = '0 0 30px rgba(46, 204, 113, 0.5)';
+    });
+    
+    leaderCard.addEventListener('mouseleave', function() {
+      this.querySelector('.profile-img').style.transform = '';
+      this.querySelector('.profile-img').style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.3)';
+    });
+  </script>
+</body>
+</html>

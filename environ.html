@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IoTGuardAI - Environment Security Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    /* Root Variables */
+    :root {
+      --bg-darker: #1a1c1c;
+      --card-bg: #2c2c2c;
+      --text-muted: #bbb;
+      --primary-color: #00a7e0;
+      --bg-dark: #1f2121;
+      --white-color: #fff;
+      --bg-color: radial-gradient(circle at 85% center, #3d3c3c, #0f0f0f, #000);
+      --glow-effect: drop-shadow(0 0 30px rgba(0, 186, 255, 0.15));
+      --shadow-effect: drop-shadow(0 0 15px #0f0f0f) drop-shadow(0 0 30px #0f0f0f);
+      --transition: all 0.3s ease;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      --font-heading: 'Times New Roman', Times, serif;
+    }
+
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: var(--white-color);
+      background-color: var(--bg-dark);
+      scroll-behavior: smooth;
+      line-height: 1.3;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--white-color);
+      transition: var(--transition);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button {
+      background: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 12px 30px;
+      font-size: 14px;
+      letter-spacing: 1px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: var(--primary-color);
+      color: var(--white-color);
+    }
+
+    /* Typography */
+    .title {
+      font-size: 4.2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      opacity: 0.2;
+      position: relative;
+      margin-bottom: 10px;
+      font-family: var(--font-heading);
+    }
+
+    .des-title {
+      margin-top: -50px;
+      font-size: 1.2rem;
+      color: var(--white-color);
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-heading);
+    }
+
+    .view {
+      color: var(--primary-color);
+      font-size: 1rem;
+      text-decoration: none;
+      margin: 20px 0 100px;
+      display: inline-block;
+    }
+
+    /* Navigation */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 100px;
+      background-color: var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      font-family: var(--font-heading);
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: var(--white-color);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-links li a {
+      position: relative;
+      padding-bottom: 5px;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .nav-links li a:hover::after {
+      width: 100%;
+    }
+
+    .search-icon {
+      font-size: 18px;
+      color: var(--white-color);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-left: 10px;
+    }
+
+    .search-icon:hover {
+      color: var(--primary-color);
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification {
+      position: relative;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: var(--primary-color);
+      color: var(--white-color);
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid var(--primary-color);
+    }
+
+    .username {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Dashboard Sections */
+    .dashboard {
+      padding: 60px 100px;
+      text-align: center;
+      align-items: center;
+    }
+
+    .dashboard-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      width: 300px;
+      margin: 20px auto;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .dashboard-card h3 {
+      color: var(--primary-color);
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .dashboard-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .dashboard-card .status {
+      font-weight: bold;
+      color: #d9534f; /* Red for issues */
+    }
+
+    /* Footer */
+    .footer {
+      padding: 60px 100px;
+      color: var(--text-muted);
+      background-color: var(--bg-darker);
+    }
+
+    .footer-container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .footer-column h4 {
+      color: var(--white-color);
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .footer-column ul li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-muted);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .footer-column ul li:hover {
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--text-muted);
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">IoT<span>Guard</span>AI</div>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="main.html" class="active">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="contactus.html">Contact</a></li>
+      </ul>
+      <a href="https://www.google.com" class="search-icon">
+        <i class="ri-search-line"></i>
+      </a>
+    </nav>
+    <div class="header-icons">
+      <div class="notification">
+        <i class="ri-notification-3-line"></i>
+        <span class="badge">5</span>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">
+          <img src="avatar.jpg" alt="Avatar">
+        </div>
+        <span class="username"><a href="dashboard.html">IoTGuardAI</a></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="dashboard">
+    <h2 class="title">🌿 Environment Security</h2>
+    <p class="des-title">Real-time monitoring and protection of our ecosystems</p>
+    <a href="#" class="view">View more →</a>
+
+    <div class="dashboard-card">
+      <h3>🌡️ Climate Change Impact</h3>
+      <p><strong>Temperature Spike Detected</strong></p>
+      <p>Unusual temperature rise detected via IoT sensors.</p>
+      <p>Current Temp: -- °C | CO₂: -- ppm</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>🦋 Biodiversity Threats</h3>
+      <p><strong>Species Migration Disruption</strong></p>
+      <p>AI flagged abnormal changes in animal migration.</p>
+      <p>Status: <span class="status">--</span></p>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>🚨 Wildlife Protection</h3>
+      <p><strong>Poaching Risk Detected</strong></p>
+      <p>Suspicious activity spotted near protected area.</p>
+      <p>Sensor Report: <span class="status">--</span></p>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>📈 Weekly Environmental Trends</h3>
+      <p>View the latest trends in environmental security data.</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>📥 Download Weekly Report</h3>
+      <button onclick="window.location.href='report.pdf'">Download PDF</button>
+      <!-- Note: Replace 'report.pdf' with actual file path or generate dynamically -->
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-column">
+        <h4>RESOURCES for IoTGuardAI</h4>
+        <ul>
+          <li>Getting Started</li>
+          <li>Training and Certification</li>
+          <li>Office</li>
+          <li>Analyst Reports</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Developers on IoTGuardAI</h4>
+        <ul>
+          <li>Developer Center</li>
+          <li>SDKs & Tools</li>
+          <li>Python on IoTGuardAI</li>
+          <li>JavaScripts on IoTGuardAI</li>
+          <li>PHP on IoTGuardAI</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>FANCY MEMBERS</h4>
+        <ul>
+          <li>Afia Tasnim Anisa</li>
+          <li>Warisa Ahmed</li>
+          <li>Tasmia Binte Arefin</li>
+          <li>Fatema-tuz-zohora</li>
+          <li>Adita Mutsuddi</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>HELP CENTER</h4>
+        <ul>
+          <li>FAQs</li>
+          <li>Terms of Use</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      COPYRIGHT © 2025 IoTGuardAI INC. ALL RIGHTS RESERVED
+    </div>
+  </footer>
+</body>
+</html>
